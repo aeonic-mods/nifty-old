@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "nifty",
+  "version": "${version}",
+  "name": "Nifty",
+  "description": "Nifty is a cross-platform library mod that serves as a basis for tech (or not) mods targeting both Forge and Quilt/Fabric.",
+  "authors": [
+    "Aeonic"
+  ],
+  "contact": {
+    "homepage": "https://github.com/aeonic-mods/nifty",
+    "sources": "https://github.com/aeonic-mods/nifty"
+  },
+  "license": "GNU GPLv3",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "design.aeonic.nifty.FabricNifty::initializeCommon"
+    ],
+    "client": [
+      "design.aeonic.nifty.FabricNifty::initializeClient"
+    ]
+  },
+  "mixins": [
+    "nifty.mixins.json"
+  ],
+  "accessWidener": "nifty.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.12",
+    "fabric": "*",
+    "minecraft": "1.18.2",
+    "java": ">=17"
+  },
+  "suggests": {
+  }
+}

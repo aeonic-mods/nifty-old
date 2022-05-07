@@ -1,0 +1,22 @@
+modLoader = "javafml" #mandatory
+loaderVersion = "[38,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
+license = "GNU GPLv3"
+[[mods]] #mandatory
+modId = "nifty" #mandatory
+version = "${file.jarVersion}" #mandatory
+# A display name for the mod
+displayName = "Nifty" #mandatory
+authors = "Aeonic" #optional
+description = '''Nifty is a cross-platform library mod that serves as a basis for tech (or not) mods targeting both Forge and Quilt/Fabric.'''
+[[dependencies.nifty]] #optional
+modId = "forge" #mandatory
+mandatory = true #mandatory
+versionRange = "[38,)" #mandatory
+ordering = "NONE"
+side = "BOTH"
+[[dependencies.nifty]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.18,1.19)"
+ordering = "NONE"
+side = "BOTH"
