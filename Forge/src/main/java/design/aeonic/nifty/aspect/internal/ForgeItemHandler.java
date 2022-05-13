@@ -1,81 +1,54 @@
 package design.aeonic.nifty.aspect.internal;
 
-import design.aeonic.nifty.api.aspect.internal.item.ItemHandler;
+import design.aeonic.nifty.api.aspect.internal.item.SimpleItemHandler;
 import design.aeonic.nifty.api.aspect.internal.item.slot.AbstractSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
+import org.apache.logging.log4j.LogManager;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * An Item Handler Aspect implementation that defers to an existing {@link net.minecraftforge.items.IItemHandler}.
- * Essentially the inverse of {@link AspectIItemHandler}.
+ * An {@link IItemHandler} implementation that defers to the item handler Aspect to expose inventories to Forge cap-driven item systems.
  */
-public class ForgeItemHandler implements ItemHandler {
+public class ForgeItemHandler extends SimpleItemHandler implements IItemHandler {
 
-    protected final IItemHandler parent;
-    protected final AbstractSlot[] slots;
-
-    public ForgeItemHandler(IItemHandler parent) {
-        this.parent = parent;
-        slots = new AbstractSlot[parent.getSlots()];
-        for (int i = 0; i < slots.length; i++) {
-            slots[i] = new Slot(i);
-        }
+    public ForgeItemHandler(AbstractSlot... slots) {
+        super(slots);
     }
 
     @Override
-    public AbstractSlot[] getItemSlots() {
-        return slots;
+    public int getSlots() {
+        return getNumSlots();
     }
 
-    /**
-     * A slot that delegates all methods to the Forge item handler.
-     */
-    public class Slot extends AbstractSlot {
-        private final int index;
+    @NotNull
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        return getSlot(slot).get();
+    }
 
-        public Slot(int index) {
-            super();
-            this.index = index;
-        }
+    @NotNull
+    @Override
+    public ItemStack insertItem(int slotIndex, @NotNull ItemStack stack, boolean simulate) {
+        if (simulate) return getSlot(slotIndex).simulateInsert(stack);
+        return getSlot(slotIndex).insert(stack);
+    }
 
-        @Override
-        public boolean allowedInSlot(ItemStack stack) {
-            return parent.isItemValid(index, stack);
-        }
+    @NotNull
+    @Override
+    public ItemStack extractItem(int slotIndex, int amount, boolean simulate) {
+        if (simulate) return getSlot(slotIndex).simulateExtract(amount);
+        return getSlot(slotIndex).extract(amount);
+    }
 
-        @Override
-        public ItemStack simulateInsert(ItemStack stack) {
-            return parent.insertItem(index, stack, true);
-        }
+    @Override
+    public int getSlotLimit(int slotIndex) {
+        AbstractSlot slot = getSlot(slotIndex);
+        return slot.maxStackSize(slot.get());
+    }
 
-        @Override
-        public ItemStack insert(ItemStack stack) {
-            return parent.insertItem(index, stack, false);
-        }
-
-        @Override
-        public ItemStack forceInsert(ItemStack stack) {
-            return insert(stack);
-        }
-
-        @Override
-        public ItemStack simulateExtract(int amount) {
-            return parent.extractItem(index, amount, true);
-        }
-
-        @Override
-        public ItemStack extract(int amount) {
-            return parent.extractItem(index, amount, false);
-        }
-
-        @Override
-        public ItemStack get() {
-            return parent.getStackInSlot(index);
-        }
-
-        @Override
-        public int maxStackSize(ItemStack stack) {
-            return parent.getStackInSlot(index).getMaxStackSize();
-        }
+    @Override
+    public boolean isItemValid(int slotIndex, @NotNull ItemStack stack) {
+        return getSlot(slotIndex).allowedInSlot(stack);
     }
 }

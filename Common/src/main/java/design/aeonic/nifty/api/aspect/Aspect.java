@@ -105,7 +105,7 @@ public interface Aspect<T> {
         private final Supplier<T> supplier;
         private @Nullable T cached;
 
-        public SimpleAspect(Supplier<T> supplier) {
+        private SimpleAspect(Supplier<T> supplier) {
             this.supplier = supplier;
             this.cached = supplier.get();
         }
@@ -130,6 +130,8 @@ public interface Aspect<T> {
     }
 
     class Empty<T> implements Aspect<T> {
+
+        private Empty() {}
 
         @Override
         public Optional<T> get() {

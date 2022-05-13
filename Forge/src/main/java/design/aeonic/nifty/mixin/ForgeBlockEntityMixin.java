@@ -36,6 +36,11 @@ public abstract class ForgeBlockEntityMixin extends CapabilityProvider<BlockEnti
         onRefresh.forEach(Runnable::run);
     }
 
+    @Override
+    public BlockEntity self() {
+        return (BlockEntity) ((Object) this);
+    }
+
     @SuppressWarnings("unchecked")
     @Nonnull
     @Override

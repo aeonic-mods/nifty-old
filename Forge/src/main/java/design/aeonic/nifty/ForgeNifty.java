@@ -36,8 +36,6 @@ public class ForgeNifty {
             player.displayClientMessage(new TextComponent(msg == null ? "null" : msg), false);
         });
 
-        ASPECTS.registerExisting(ItemHandler.class, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
-
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ASPECTS.registerAspects);
     }
 }

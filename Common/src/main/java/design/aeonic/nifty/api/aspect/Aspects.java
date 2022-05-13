@@ -1,6 +1,7 @@
 package design.aeonic.nifty.api.aspect;
 
-import design.aeonic.nifty.api.core.Platform;
+import design.aeonic.nifty.api.aspect.internal.item.ItemHandler;
+import design.aeonic.nifty.api.aspect.internal.item.slot.AbstractSlot;
 
 public interface Aspects {
 
@@ -13,5 +14,12 @@ public interface Aspects {
      * @param <T> the type
      */
     <T> void registerAspect(Class<T> aspectType);
+
+    /**
+     * Creates a new item handler, providing the correct implementation for the current platform.
+     * @param slots the slots describing this handler's behavior
+     * @return the new item handler
+     */
+    ItemHandler itemHandler(AbstractSlot... slots);
 
 }
