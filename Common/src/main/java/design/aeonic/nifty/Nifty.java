@@ -3,7 +3,7 @@ package design.aeonic.nifty;
 import design.aeonic.nifty.api.aspect.Aspects;
 import design.aeonic.nifty.api.core.PlatformInfo;
 import design.aeonic.nifty.api.registry.Registrar;
-import design.aeonic.nifty.impl.Services;
+import design.aeonic.nifty.api.core.Services;
 
 public class Nifty {
 

@@ -1,6 +1,4 @@
-package design.aeonic.nifty.impl;
-
-import design.aeonic.nifty.api.core.Constants;
+package design.aeonic.nifty.api.core;
 
 import java.util.ServiceLoader;
 
@@ -13,4 +11,5 @@ public class Services {
         Constants.NIFTY_LOG.debug("Loaded {} for service {}", loadedService, clazz);
         return loadedService;
     }
+
 }

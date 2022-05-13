@@ -1,5 +1,6 @@
 package design.aeonic.nifty.services;
 
+import design.aeonic.nifty.api.core.Platform;
 import design.aeonic.nifty.api.core.PlatformInfo;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraftforge.data.loading.DatagenModLoader;
@@ -13,8 +14,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class ForgePlatformInfo implements PlatformInfo {
 
     @Override
-    public String getPlatformName() {
-        return "Forge";
+    public Platform getPlatform() {
+        return Platform.FORGE;
     }
 
     @Override
