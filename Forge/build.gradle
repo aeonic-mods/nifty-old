@@ -74,6 +74,7 @@ dependencies {
 mixin {
     add sourceSets.main, "mixins.${mod_id}.refmap.json"
     config "${mod_id}.mixins.json"
+    config "${mod_id}.forge.mixins.json"
 
     debug.verbose = true
     debug.export = true

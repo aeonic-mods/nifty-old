@@ -22,7 +22,8 @@
     ]
   },
   "mixins": [
-    "nifty.mixins.json"
+    "nifty.mixins.json",
+    "nifty.fabric.mixins.json"
   ],
   "accessWidener": "nifty.accesswidener",
   "depends": {

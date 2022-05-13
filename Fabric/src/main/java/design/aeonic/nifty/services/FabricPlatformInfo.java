@@ -1,13 +1,14 @@
 package design.aeonic.nifty.services;
 
+import design.aeonic.nifty.api.core.Platform;
 import design.aeonic.nifty.api.core.PlatformInfo;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class FabricPlatformInfo implements PlatformInfo {
 
     @Override
-    public String getPlatformName() {
-        return "Fabric";
+    public Platform getPlatform() {
+        return Platform.FABRIC;
     }
 
     @Override
