@@ -6,7 +6,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
+import org.apache.logging.log4j.LogManager;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,6 +30,11 @@ public abstract class ForgeBlockEntityMixin extends CapabilityProvider<BlockEnti
     }
 
     @Override
+    public BlockEntity self() {
+        return (BlockEntity) ((Object) this);
+    }
+
+    @Override
     public void onRefreshAspects(Runnable callback) {
         onRefresh.add(callback);
     }
@@ -37,8 +45,15 @@ public abstract class ForgeBlockEntityMixin extends CapabilityProvider<BlockEnti
     }
 
     @Override
-    public BlockEntity self() {
-        return (BlockEntity) ((Object) this);
+    public void invalidateCaps() {
+        refreshAspects();
+        super.invalidateCaps();
+    }
+
+    @Override
+    public void setDirty() {
+        LogManager.getLogger().info("changed");
+        self().setChanged();
     }
 
     @SuppressWarnings("unchecked")
@@ -50,5 +65,4 @@ public abstract class ForgeBlockEntityMixin extends CapabilityProvider<BlockEnti
         if (maybeCap != null) return maybeCap;
         return super.getCapability(cap, side);
     }
-
 }

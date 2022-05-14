@@ -1,7 +1,9 @@
 package design.aeonic.nifty.api.aspect.internal.item.slot;
 
+import design.aeonic.nifty.api.aspect.AspectProvider;
 import design.aeonic.nifty.api.aspect.internal.item.ItemHandler;
 import net.minecraft.world.item.ItemStack;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Describes an {@link ItemHandler} slot. <i>Not</i> synonymous with a Vanilla {@link net.minecraft.world.inventory.Slot Container Slot}.<br><br>
@@ -10,9 +12,11 @@ import net.minecraft.world.item.ItemStack;
  */
 public abstract class AbstractSlot {
 
+    protected AspectProvider provider;
     protected ItemStack containedStack;
 
-    public AbstractSlot() {
+    public AbstractSlot(AspectProvider provider) {
+        this.provider = provider;
         this.containedStack = ItemStack.EMPTY;
     }
 
@@ -84,6 +88,7 @@ public abstract class AbstractSlot {
      * @return what's left of the inserted item stack - if nothing is inserted, will equal the passed stack
      */
     public ItemStack forceInsert(ItemStack stack) {
+        ItemStack old = stack.copy();
         if (!containedStack.isEmpty()) {
             // Item can't be stacked with contained
             if (!stack.is(containedStack.getItem())) return stack;
@@ -98,18 +103,20 @@ public abstract class AbstractSlot {
         }
         // Slot is empty
         containedStack = stack.split(maxStackSize(stack));
+        if (!stack.equals(old)) provider.setDirty();
         return stack;
     }
 
-
     /**
      * Attempts to extract the given amount, modifying the slot's stored item immediately and returning the extracted stack. Ignores direction checks.<br><br>
-     * Extracts at most the smaller of {@code amount} and the contained item's max stack size. And, of course, the amount contained.<br><br>
+     * Extracts at most the smaller of {@code amount} and the contained item's max stack size.<br><br>
      * @param amount the amount to extract
      * @return the extracted stack; an empty stack if extraction failed or the slot is empty
      */
     public ItemStack extract(int amount) {
-        return containedStack.split(Math.min(amount, containedStack.getMaxStackSize()));
+        int amt = Math.min(amount, containedStack.getMaxStackSize());
+        if (amt > 0) provider.setDirty();
+        return containedStack.split(amt);
     }
 
     /**

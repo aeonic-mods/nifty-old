@@ -25,12 +25,13 @@ public interface ForgeAspectProvider<T extends CapabilityProvider<T>> extends As
 
     @SuppressWarnings("unchecked")
     @Override
-    default <A> Aspect<A> getAspect(Class<A> aspectClass, @Nullable Direction direction) {
-        // TODO: existing capabilities are currently hardcoded
-        if (aspectClass.equals(ItemHandler.class)) {
-            return (Aspect<A>) ForgeAspect.of(this,
-                    () -> self().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction))
-                    .wrap(IItemHandlerWrapper::new);
+    default <A> Aspect<A> getAspect(Class<A> aspectClass, @Nullable Direction direction, boolean onlyInternal) {
+        if (!onlyInternal) {
+            if (aspectClass.equals(ItemHandler.class)) {
+                return (Aspect<A>) ForgeAspect.of(this,
+                                () -> self().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction))
+                        .wrap(handler -> new IItemHandlerWrapper(this, handler));
+            }
         }
         if (!ForgeNifty.ASPECTS.exists(aspectClass)) {
             // If the aspect class has not been registered explicitly, attempt to expose an existing Capability as an Aspect
@@ -41,7 +42,7 @@ public interface ForgeAspectProvider<T extends CapabilityProvider<T>> extends As
             }
         }
         // Default behavior
-        return AspectProvider.super.getAspect(aspectClass, direction);
+        return AspectProvider.super.getAspect(aspectClass, direction, onlyInternal);
     }
 
     /**
@@ -51,7 +52,7 @@ public interface ForgeAspectProvider<T extends CapabilityProvider<T>> extends As
     @SuppressWarnings("unchecked")
     static @Nullable <A> LazyOptional<A> getCapabilityCallback(AspectProvider provider, Capability<A> cap, @Nullable Direction direction) {
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            Aspect<A> aspect = (Aspect<A>) provider.getAspect(ItemHandler.class, direction);
+            Aspect<A> aspect = (Aspect<A>) provider.getAspect(ItemHandler.class, direction, true);
             @Nullable A obj = aspect.ifPresent(a -> a);
             if (obj != null) return LazyOptional.of(() -> obj);
             return LazyOptional.empty();
@@ -60,7 +61,7 @@ public interface ForgeAspectProvider<T extends CapabilityProvider<T>> extends As
         Class<A> clazz = ForgeNifty.ASPECTS.asAspectClass(cap);
         if (clazz != null) {
             // The capability is a previously registered Aspect
-            Aspect<A> aspect = provider.getAspect(clazz, direction);
+            Aspect<A> aspect = provider.getAspect(clazz, direction, true);
             @Nullable A obj = aspect.ifPresent(a -> a);
             if (obj != null) return LazyOptional.of(() -> obj);
             return LazyOptional.empty();

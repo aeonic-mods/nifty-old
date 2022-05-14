@@ -1,5 +1,6 @@
 package design.aeonic.nifty.aspect.internal;
 
+import design.aeonic.nifty.api.aspect.AspectProvider;
 import design.aeonic.nifty.api.aspect.internal.item.SimpleItemHandler;
 import design.aeonic.nifty.api.aspect.internal.item.slot.AbstractSlot;
 import net.minecraft.world.item.ItemStack;
@@ -30,8 +31,9 @@ public class ForgeItemHandler extends SimpleItemHandler implements IItemHandler 
     @NotNull
     @Override
     public ItemStack insertItem(int slotIndex, @NotNull ItemStack stack, boolean simulate) {
-        if (simulate) return getSlot(slotIndex).simulateInsert(stack);
-        return getSlot(slotIndex).insert(stack);
+        ItemStack newStack = stack.copy();
+        if (simulate) return getSlot(slotIndex).simulateInsert(newStack);
+        return getSlot(slotIndex).insert(newStack);
     }
 
     @NotNull

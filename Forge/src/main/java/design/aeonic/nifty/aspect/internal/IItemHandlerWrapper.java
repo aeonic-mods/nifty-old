@@ -1,5 +1,6 @@
 package design.aeonic.nifty.aspect.internal;
 
+import design.aeonic.nifty.api.aspect.AspectProvider;
 import design.aeonic.nifty.api.aspect.internal.item.ItemHandler;
 import design.aeonic.nifty.api.aspect.internal.item.slot.AbstractSlot;
 import net.minecraft.world.item.ItemStack;
@@ -11,10 +12,12 @@ import net.minecraftforge.items.IItemHandler;
  */
 public class IItemHandlerWrapper implements ItemHandler {
 
+    protected final AspectProvider provider;
     protected final IItemHandler parent;
     protected final AbstractSlot[] slots;
 
-    public IItemHandlerWrapper(IItemHandler parent) {
+    public IItemHandlerWrapper(AspectProvider provider, IItemHandler parent) {
+        this.provider = provider;
         this.parent = parent;
         slots = new AbstractSlot[parent.getSlots()];
         for (int i = 0; i < slots.length; i++) {
@@ -34,7 +37,7 @@ public class IItemHandlerWrapper implements ItemHandler {
         private final int index;
 
         public Slot(int index) {
-            super();
+            super(IItemHandlerWrapper.this.provider);
             this.index = index;
         }
 

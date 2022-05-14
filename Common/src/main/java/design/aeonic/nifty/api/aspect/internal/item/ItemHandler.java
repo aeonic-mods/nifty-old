@@ -1,10 +1,12 @@
 package design.aeonic.nifty.api.aspect.internal.item;
 
+import design.aeonic.nifty.api.aspect.AspectProvider;
 import design.aeonic.nifty.api.aspect.internal.item.slot.AbstractSlot;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * An aspect that allows providers to contain items which can be inserted and extracted in a specified manner.<br><br>
@@ -17,7 +19,7 @@ public interface ItemHandler {
      * Writes this item handler's slot contents to a given compound tag.<br><br>
      * Assumes a tag without existing data.
      */
-    default void serialize(CompoundTag tag) {
+    default CompoundTag serialize(CompoundTag tag) {
         ListTag list = tag.getList("Slots", Tag.TAG_COMPOUND);
         AbstractSlot[] slots = getItemSlots();
 
@@ -26,6 +28,8 @@ public interface ItemHandler {
             slots[i].get().save(item);
             list.add(item);
         }
+        tag.put("Slots", list);
+        return tag;
     }
 
     /**

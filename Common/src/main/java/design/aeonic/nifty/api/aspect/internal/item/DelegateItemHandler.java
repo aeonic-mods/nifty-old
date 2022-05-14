@@ -6,9 +6,8 @@ import net.minecraft.nbt.CompoundTag;
 
 /**
  * An Item Handler delegate that mirrors some slots from its parent; can be used to expose slots conditionally or only to specific sides.<br><br>
- * @param <T> the provider type the item handler is attached to
  */
-public class DelegateItemHandler<T extends AspectProvider> implements ItemHandler {
+public class DelegateItemHandler implements ItemHandler {
 
     protected final ItemHandler parent;
     protected final AbstractSlot[] slots;
@@ -26,7 +25,7 @@ public class DelegateItemHandler<T extends AspectProvider> implements ItemHandle
     }
 
     @Override
-    public void serialize(CompoundTag tag) {}
+    public CompoundTag serialize(CompoundTag tag) { return tag; }
 
     @Override
     public void deserialize(CompoundTag tag) {}

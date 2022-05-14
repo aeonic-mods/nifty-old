@@ -13,7 +13,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
 @Mod(Constants.NIFTY_ID)
@@ -31,7 +30,7 @@ public class ForgeNifty {
             BlockEntity be = player.level.getBlockEntity(result.getBlockPos().below());
             if (be == null) return;
 
-            Aspect<ItemHandler> aspect1 = AspectProvider.cast(be).getAspect(ItemHandler.class, null);
+            Aspect<ItemHandler> aspect1 = AspectProvider.cast(be).getAspect(ItemHandler.class, null, false);
             String msg = aspect1.ifPresent(i -> i.getSlot(0).get().toString());
             player.displayClientMessage(new TextComponent(msg == null ? "null" : msg), false);
         });

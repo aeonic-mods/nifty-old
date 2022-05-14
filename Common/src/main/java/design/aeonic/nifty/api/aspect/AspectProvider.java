@@ -27,12 +27,14 @@ public interface AspectProvider {
      * to wrap the object you're exposing.<br><br>
      * You can pass any interface to this method, if it's an interface that exists as a Forge capability from another mod
      * (or within the Fabric API system), the provider will attempt to wrap it as an Aspect.
+     * @param <A> the Aspect type to return
      * @param aspectClass the base class/interface of the Aspect to return - you may want to compare with
      * {@link Class#isAssignableFrom(Class)} for safety
-     * @param <A> the Aspect type to return
+     * @param onlyInternal if true, the platform implementation should not expose existing functionality to the Aspect system
+     *                (usually should be false)
      * @return a given Aspect if you want to expose it (via {@link Aspect#of}), otherwise an empty Aspect
      */
-    default <A> Aspect<A> getAspect(Class<A> aspectClass, @Nullable Direction direction) {
+    default <A> Aspect<A> getAspect(Class<A> aspectClass, @Nullable Direction direction, boolean onlyInternal) {
         return Aspect.empty();
     }
 
@@ -52,6 +54,13 @@ public interface AspectProvider {
      * override it unless you know what you're doing.
      */
     default void refreshAspects() {}
+
+    /**
+     * Marks that the provider has changed; called from within Aspects to ensure they are serialized when necessary.<br><br>
+     * The implementation for this method is provided by the default aspect provider mixins; you probably shouldn't
+     * override it unless you know what you're doing.
+     */
+    default void setDirty() {}
 
     /**
      * Casts the given object to an AspectProvider to avoid warnings in your editor (since mixins are not visibly applied

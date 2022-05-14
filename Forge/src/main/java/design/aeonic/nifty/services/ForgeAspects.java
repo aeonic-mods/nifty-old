@@ -2,6 +2,7 @@ package design.aeonic.nifty.services;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import design.aeonic.nifty.api.aspect.AspectProvider;
 import design.aeonic.nifty.api.aspect.Aspects;
 import design.aeonic.nifty.api.aspect.internal.item.ItemHandler;
 import design.aeonic.nifty.api.aspect.internal.item.slot.AbstractSlot;
@@ -10,14 +11,10 @@ import design.aeonic.nifty.mixin.access.CapabilityManagerAccess;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import org.checkerframework.checker.units.qual.C;
 import org.objectweb.asm.Type;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 
 public class ForgeAspects implements Aspects {

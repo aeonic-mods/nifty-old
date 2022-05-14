@@ -1,5 +1,6 @@
 package design.aeonic.nifty.api.aspect.internal.item.slot;
 
+import design.aeonic.nifty.api.aspect.AspectProvider;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Function;
@@ -12,12 +13,16 @@ public class SimpleSlot extends AbstractSlot {
     protected int x;
     protected int y;
 
+    public SimpleSlot(AspectProvider provider) {
+        this(provider, -1, -1);
+    }
+
     /**
      * @param x this slot's x position in a screen
      * @param y this slot's y position in a screen
      */
-    public SimpleSlot(int x, int y) {
-        this(x, y, $ -> true, ItemStack::getMaxStackSize);
+    public SimpleSlot(AspectProvider provider, int x, int y) {
+        this(provider, x, y, $ -> true, ItemStack::getMaxStackSize);
     }
 
     /**
@@ -25,8 +30,8 @@ public class SimpleSlot extends AbstractSlot {
      * @param x this slot's x position in a screen
      * @param y this slot's y position in a screen
      */
-    public SimpleSlot(int x, int y, Predicate<ItemStack> allowedPredicate) {
-        this(x, y, allowedPredicate, ItemStack::getMaxStackSize);
+    public SimpleSlot(AspectProvider provider, int x, int y, Predicate<ItemStack> allowedPredicate) {
+        this(provider, x, y, allowedPredicate, ItemStack::getMaxStackSize);
     }
 
     /**
@@ -35,8 +40,8 @@ public class SimpleSlot extends AbstractSlot {
      * @param x this slot's x position in a screen
      * @param y this slot's y position in a screen
      */
-    public SimpleSlot(int x, int y, Predicate<ItemStack> allowedPredicate, Function<ItemStack,Integer> maxStack) {
-        super();
+    public SimpleSlot(AspectProvider provider, int x, int y, Predicate<ItemStack> allowedPredicate, Function<ItemStack,Integer> maxStack) {
+        super(provider);
         this.x = x;
         this.y = y;
         this.allowedPredicate = allowedPredicate;
