@@ -1,4 +1,4 @@
-package design.aeonic.nifty.services;
+package design.aeonic.nifty.impl.core;
 
 import design.aeonic.nifty.api.core.Factories;
 import net.minecraft.core.BlockPos;

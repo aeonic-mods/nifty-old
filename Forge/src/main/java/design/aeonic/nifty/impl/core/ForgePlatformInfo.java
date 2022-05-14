@@ -1,4 +1,4 @@
-package design.aeonic.nifty.services;
+package design.aeonic.nifty.impl.core;
 
 import design.aeonic.nifty.api.core.Platform;
 import design.aeonic.nifty.api.core.PlatformInfo;

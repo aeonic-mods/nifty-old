@@ -1,8 +1,7 @@
-package design.aeonic.nifty.services;
+package design.aeonic.nifty.impl.registry;
 
 import design.aeonic.nifty.api.registry.GameObject;
 import design.aeonic.nifty.api.registry.Registrar;
-import design.aeonic.nifty.registry.FabricGameObject;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 

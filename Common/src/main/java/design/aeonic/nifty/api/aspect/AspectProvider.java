@@ -19,6 +19,16 @@ import javax.annotation.Nullable;
 public interface AspectProvider {
 
     /**
+     * Casts the given object to an AspectProvider to avoid warnings in your editor (since mixins are not visibly applied
+     * at compile time).<br><br>
+     * Obviously the passed object should be one of those listed in the {@link AspectProvider} Javadoc, or one that
+     * you've added the interface to yourself.
+     */
+    static AspectProvider cast(@Nonnull Object gameObject) {
+        return (AspectProvider) gameObject;
+    }
+
+    /**
      * Gets an Aspect, if it exists and should be exposed on the given side. This decision is made by the provider
      * subclass (ie your custom block entity).<br><br>
      * If this provider isn't a blockentity, the direction will probably be null; you should return whatever Aspect
@@ -27,11 +37,12 @@ public interface AspectProvider {
      * to wrap the object you're exposing.<br><br>
      * You can pass any interface to this method, if it's an interface that exists as a Forge capability from another mod
      * (or within the Fabric API system), the provider will attempt to wrap it as an Aspect.
-     * @param <A> the Aspect type to return
-     * @param aspectClass the base class/interface of the Aspect to return - you may want to compare with
-     * {@link Class#isAssignableFrom(Class)} for safety
+     *
+     * @param <A>          the Aspect type to return
+     * @param aspectClass  the base class/interface of the Aspect to return - you may want to compare with
+     *                     {@link Class#isAssignableFrom(Class)} for safety
      * @param onlyInternal if true, the platform implementation should not expose existing functionality to the Aspect system
-     *                (usually should be false)
+     *                     (usually should be false)
      * @return a given Aspect if you want to expose it (via {@link Aspect#of}), otherwise an empty Aspect
      */
     default <A> Aspect<A> getAspect(Class<A> aspectClass, @Nullable Direction direction, boolean onlyInternal) {
@@ -43,9 +54,11 @@ public interface AspectProvider {
      * When this is run depends on the provider implementation.<br><br>
      * The implementation for this method is provided by the default aspect provider mixins; you probably shouldn't
      * override it unless you know what you're doing.
+     *
      * @param callback the callback to run on refresh
      */
-    default void onRefreshAspects(Runnable callback) {}
+    default void onRefreshAspects(Runnable callback) {
+    }
 
     /**
      * Called when this provider's exposed Aspects have been updated or the provider has been invalidated.<br>
@@ -53,23 +66,15 @@ public interface AspectProvider {
      * The implementation for this method is provided by the default aspect provider mixins; you probably shouldn't
      * override it unless you know what you're doing.
      */
-    default void refreshAspects() {}
+    default void refreshAspects() {
+    }
 
     /**
      * Marks that the provider has changed; called from within Aspects to ensure they are serialized when necessary.<br><br>
      * The implementation for this method is provided by the default aspect provider mixins; you probably shouldn't
      * override it unless you know what you're doing.
      */
-    default void setDirty() {}
-
-    /**
-     * Casts the given object to an AspectProvider to avoid warnings in your editor (since mixins are not visibly applied
-     * at compile time).<br><br>
-     * Obviously the passed object should be one of those listed in the {@link AspectProvider} Javadoc, or one that
-     * you've added the interface to yourself.
-     */
-    static AspectProvider cast(@Nonnull Object gameObject) {
-        return (AspectProvider) gameObject;
+    default void setDirty() {
     }
 
 }

@@ -42,9 +42,30 @@ import java.util.function.Supplier;
  * As an Aspect can wrap any object, it's also used to expose existing Capabilities on Forge (or the equivalent on Fabric,
  * once we figure that out; the implementation is dubious). Just pass a {@link Class} object for the capability interface
  * you're trying to access and it'll be provided as an Aspect! Handy, no?
+ *
  * @param <T> the Aspect interface
  */
 public interface Aspect<T> {
+
+    /**
+     * Wraps a given object as an Aspect, and adds a refresh listener to the passed provider.
+     *
+     * @param provider the provider exposing this Aspect
+     * @param supplier a supplier to update the contained object - should probably be a call to the provider's #getAspect method
+     * @return the object, wrapped as an Aspect that will update via the passed supplier when invalidated
+     */
+    static <T> Aspect<T> of(AspectProvider provider, Supplier<T> supplier) {
+        Aspect<T> aspect = new SimpleAspect<>(supplier);
+        provider.onRefreshAspects(aspect::refresh);
+        return aspect;
+    }
+
+    /**
+     * Creates an Aspect that will always be empty.
+     */
+    static <T> Aspect<T> empty() {
+        return new Empty<>();
+    }
 
     /**
      * Gets the actual object this Aspect wraps
@@ -60,7 +81,8 @@ public interface Aspect<T> {
     /**
      * Identical to {@link #ifPresent(BiFunction)}, but without the Aspect parameter.
      */
-    default @Nullable <R> R ifPresent(Function<T, R> function) {
+    default @Nullable
+    <R> R ifPresent(Function<T, R> function) {
         return ifPresent((aspect, t) -> function.apply(t));
     }
 
@@ -68,9 +90,9 @@ public interface Aspect<T> {
      * Fancier {@link Optional#ifPresent(Consumer)}; runs the given function and returns its return value if the wrapped
      * object is present; otherwise returns null. The function is passed this aspect object as well in case you need to
      * store it etc.<br><br>
-     *
      */
-    default @Nullable <R> R ifPresent(BiFunction<Aspect<T>, T, R> function) {
+    default @Nullable
+    <R> R ifPresent(BiFunction<Aspect<T>, T, R> function) {
         if (get().isPresent())
             return function.apply(this, get().get());
         return null;
@@ -86,24 +108,13 @@ public interface Aspect<T> {
     }
 
     /**
-     * Wraps a given object as an Aspect, and adds a refresh listener to the passed provider.
-     * @param provider the provider exposing this Aspect
-     * @param supplier a supplier to update the contained object - should probably be a call to the provider's #getAspect method
-     * @return the object, wrapped as an Aspect that will update via the passed supplier when invalidated
-     */
-    static <T> Aspect<T> of(AspectProvider provider, Supplier<T> supplier) {
-        Aspect<T> aspect = new SimpleAspect<>(supplier);
-        provider.onRefreshAspects(aspect::refresh);
-        return aspect;
-    }
-
-    /**
      * Simple Aspect implementation for providers exposing Aspects.<br><br>
      */
     class SimpleAspect<T> implements Aspect<T> {
 
         private final Supplier<T> supplier;
-        private @Nullable T cached;
+        private @Nullable
+        T cached;
 
         private SimpleAspect(Supplier<T> supplier) {
             this.supplier = supplier;
@@ -122,16 +133,10 @@ public interface Aspect<T> {
 
     }
 
-    /**
-     * Creates an Aspect that will always be empty.
-     */
-    static <T> Aspect<T> empty() {
-        return new Empty<>();
-    }
-
     class Empty<T> implements Aspect<T> {
 
-        private Empty() {}
+        private Empty() {
+        }
 
         @Override
         public Optional<T> get() {
@@ -139,7 +144,8 @@ public interface Aspect<T> {
         }
 
         @Override
-        public void refresh() {}
+        public void refresh() {
+        }
 
     }
 

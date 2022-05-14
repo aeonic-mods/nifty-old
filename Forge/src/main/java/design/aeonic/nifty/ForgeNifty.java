@@ -4,7 +4,7 @@ import design.aeonic.nifty.api.aspect.Aspect;
 import design.aeonic.nifty.api.aspect.AspectProvider;
 import design.aeonic.nifty.api.aspect.internal.item.ItemHandler;
 import design.aeonic.nifty.api.core.Constants;
-import design.aeonic.nifty.services.ForgeAspects;
+import design.aeonic.nifty.impl.aspect.ForgeAspects;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.entity.BlockEntity;

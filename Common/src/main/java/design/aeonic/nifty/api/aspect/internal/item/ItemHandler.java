@@ -1,16 +1,15 @@
 package design.aeonic.nifty.api.aspect.internal.item;
 
-import design.aeonic.nifty.api.aspect.AspectProvider;
 import design.aeonic.nifty.api.aspect.internal.item.slot.AbstractSlot;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
-import org.apache.logging.log4j.LogManager;
 
 /**
  * An aspect that allows providers to contain items which can be inserted and extracted in a specified manner.<br><br>
  * This behavior is defined by the slot instances contained in {@link #getItemSlots()}.
+ *
  * @see design.aeonic.nifty.api.aspect.internal.item.slot
  */
 public interface ItemHandler {
@@ -52,12 +51,12 @@ public interface ItemHandler {
 
     /**
      * Attempts to insert an item stack, delegating to the specified slot. Returns the remainder of the inserted stack.
-     * @param slot the slot index to insert to
+     *
+     * @param slot  the slot index to insert to
      * @param stack the stack to insert
      * @return what's left of the inserted item stack - if nothing is inserted, will equal the passed stack
-     *
-     * @see AbstractSlot#insert(ItemStack)
      * @throws IndexOutOfBoundsException if the slot index is invalid.
+     * @see AbstractSlot#insert(ItemStack)
      */
     default ItemStack insert(int slot, ItemStack stack) {
         return getSlot(slot).insert(stack);
@@ -66,12 +65,12 @@ public interface ItemHandler {
     /**
      * Attempts to extract the given amount from the given slot, returning the extracted stack. Delegates to the specified slot's extract method.<br><br>
      * Extracts at most the smaller of `amount` and the contained item's max stack size. And, of course, the amount contained.
-     * @param slot the slot index to extract from
-     * @param num the amount to extract
-     * @return the extracted stack; an empty stack if extraction failed or the slot is empty
      *
-     * @see AbstractSlot#extract(int)
+     * @param slot the slot index to extract from
+     * @param num  the amount to extract
+     * @return the extracted stack; an empty stack if extraction failed or the slot is empty
      * @throws IndexOutOfBoundsException if the slot index is invalid.
+     * @see AbstractSlot#extract(int)
      */
     default ItemStack extract(int slot, int num) {
         return getSlot(slot).extract(num);

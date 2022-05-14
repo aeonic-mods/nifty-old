@@ -1,4 +1,4 @@
-package design.aeonic.nifty.registry;
+package design.aeonic.nifty.impl.registry;
 
 import net.minecraft.core.Registry;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 /**
- * A generic map of Vanilla {@link Registry} -> Forge {@link DeferredRegister} for use in {@link design.aeonic.nifty.services.ForgeRegistrar}.<br><br>
+ * A generic map of Vanilla {@link Registry} -> Forge {@link DeferredRegister} for use in {@link ForgeRegistrar}.<br><br>
  * Probably not very well optimized but should be negligible as it's only used once during registry.
  */
 @SuppressWarnings("unchecked")

@@ -1,4 +1,4 @@
-package design.aeonic.nifty.aspect;
+package design.aeonic.nifty.impl.aspect;
 
 import design.aeonic.nifty.api.aspect.Aspect;
 import design.aeonic.nifty.api.aspect.AspectProvider;
@@ -13,16 +13,16 @@ public final class ForgeAspect<T> implements Aspect<T> {
     private final Supplier<LazyOptional<T>> supplier;
     private LazyOptional<T> cached;
 
-    static <T> ForgeAspect<T> of(AspectProvider provider, Supplier<LazyOptional<T>> supplier) {
-        ForgeAspect<T> aspect = new ForgeAspect<>(supplier);
-        provider.onRefreshAspects(aspect::refresh);
-        return aspect;
-    }
-
     private ForgeAspect(Supplier<LazyOptional<T>> supplier) {
         this.supplier = supplier;
         this.cached = supplier.get();
         this.cached.addListener($ -> refresh());
+    }
+
+    static <T> ForgeAspect<T> of(AspectProvider provider, Supplier<LazyOptional<T>> supplier) {
+        ForgeAspect<T> aspect = new ForgeAspect<>(supplier);
+        provider.onRefreshAspects(aspect::refresh);
+        return aspect;
     }
 
     @Override

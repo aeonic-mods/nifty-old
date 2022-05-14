@@ -1,4 +1,4 @@
-package design.aeonic.nifty.registry;
+package design.aeonic.nifty.impl.registry;
 
 import design.aeonic.nifty.api.registry.GameObject;
 import net.minecraft.resources.ResourceLocation;

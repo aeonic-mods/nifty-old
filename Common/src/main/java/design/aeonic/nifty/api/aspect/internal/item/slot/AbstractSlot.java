@@ -3,7 +3,6 @@ package design.aeonic.nifty.api.aspect.internal.item.slot;
 import design.aeonic.nifty.api.aspect.AspectProvider;
 import design.aeonic.nifty.api.aspect.internal.item.ItemHandler;
 import net.minecraft.world.item.ItemStack;
-import org.apache.logging.log4j.LogManager;
 
 /**
  * Describes an {@link ItemHandler} slot. <i>Not</i> synonymous with a Vanilla {@link net.minecraft.world.inventory.Slot Container Slot}.<br><br>
@@ -36,6 +35,7 @@ public abstract class AbstractSlot {
 
     /**
      * Checks whether the given item is allowed in this slot.
+     *
      * @param stack the item stack to check
      */
     public abstract boolean allowedInSlot(ItemStack stack);
@@ -72,6 +72,7 @@ public abstract class AbstractSlot {
 
     /**
      * Inserts an item stack to the slot if allowed; returns the remainder of the inserted stack. Ignores direction checks.<br><br>
+     *
      * @param stack the item stack to insert
      * @return what's left of the inserted item stack - if nothing is inserted, will equal the passed stack
      * @see #forceInsert(ItemStack)
@@ -84,6 +85,7 @@ public abstract class AbstractSlot {
     /**
      * Inserts an item stack to the slot without performing any checks; returns the remainder of the inserted stack.<br><br>
      * Still respects the max slot stack size and any stack that's already in the slot; in other words, normal insertion behavior, but without the slot's filtering.
+     *
      * @param stack the item stack to insert
      * @return what's left of the inserted item stack - if nothing is inserted, will equal the passed stack
      */
@@ -110,6 +112,7 @@ public abstract class AbstractSlot {
     /**
      * Attempts to extract the given amount, modifying the slot's stored item immediately and returning the extracted stack. Ignores direction checks.<br><br>
      * Extracts at most the smaller of {@code amount} and the contained item's max stack size.<br><br>
+     *
      * @param amount the amount to extract
      * @return the extracted stack; an empty stack if extraction failed or the slot is empty
      */
@@ -128,6 +131,7 @@ public abstract class AbstractSlot {
 
     /**
      * Sets the contained item stack, with no checks. Mainly for internal use.
+     *
      * @param stack the item stack
      */
     public void set(ItemStack stack) {

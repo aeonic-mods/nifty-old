@@ -14,9 +14,9 @@ public interface GameObject<T> extends Supplier<T> {
     ResourceLocation key();
 
     /**
-     * A memoized getter for the actual game object.
+     * A memoized getter for the actual game object. If it hasn't yet been registered, an error will be thrown.
      *
-     * @return the object. If it hasn't yet been registered, an error will be thrown
+     * @return the object
      */
     T get();
 

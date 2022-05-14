@@ -1,6 +1,6 @@
 package design.aeonic.nifty.mixin;
 
-import design.aeonic.nifty.aspect.ForgeAspectProvider;
+import design.aeonic.nifty.impl.aspect.ForgeAspectProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
@@ -8,8 +8,6 @@ import net.minecraftforge.common.capabilities.CapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import org.apache.logging.log4j.LogManager;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

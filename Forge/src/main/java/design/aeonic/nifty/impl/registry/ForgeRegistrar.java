@@ -1,9 +1,7 @@
-package design.aeonic.nifty.services;
+package design.aeonic.nifty.impl.registry;
 
 import design.aeonic.nifty.api.registry.GameObject;
 import design.aeonic.nifty.api.registry.Registrar;
-import design.aeonic.nifty.registry.DeferredRegisterMap;
-import design.aeonic.nifty.registry.ForgeGameObject;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 
@@ -19,6 +17,7 @@ public class ForgeRegistrar implements Registrar {
     @Override
     public <T> GameObject<T> register(Registry<? super T> registry, ResourceLocation key, Supplier<T> object) {
         var registryMap = modRegistryMap.computeIfAbsent(key.getNamespace(), DeferredRegisterMap::new);
-        return new ForgeGameObject<T>(registryMap.register(registry, key.getPath(), object));
+        return new ForgeGameObject<>(registryMap.register(registry, key.getPath(), object));
     }
+
 }

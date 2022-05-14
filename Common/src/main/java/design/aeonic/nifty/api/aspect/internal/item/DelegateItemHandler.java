@@ -1,6 +1,5 @@
 package design.aeonic.nifty.api.aspect.internal.item;
 
-import design.aeonic.nifty.api.aspect.AspectProvider;
 import design.aeonic.nifty.api.aspect.internal.item.slot.AbstractSlot;
 import net.minecraft.nbt.CompoundTag;
 
@@ -14,7 +13,7 @@ public class DelegateItemHandler implements ItemHandler {
 
     /**
      * @param parent the parent item handler
-     * @param slots the indices of slots that this handler should expose from its parent - must be valid for the parent
+     * @param slots  the indices of slots that this handler should expose from its parent - must be valid for the parent
      */
     public DelegateItemHandler(ItemHandler parent, int[] slots) {
         this.parent = parent;
@@ -25,10 +24,13 @@ public class DelegateItemHandler implements ItemHandler {
     }
 
     @Override
-    public CompoundTag serialize(CompoundTag tag) { return tag; }
+    public CompoundTag serialize(CompoundTag tag) {
+        return tag;
+    }
 
     @Override
-    public void deserialize(CompoundTag tag) {}
+    public void deserialize(CompoundTag tag) {
+    }
 
     @Override
     public AbstractSlot[] getItemSlots() {

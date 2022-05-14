@@ -27,8 +27,8 @@ public class SimpleSlot extends AbstractSlot {
 
     /**
      * @param allowedPredicate a predicate for checking whether an item is allowed in this slot
-     * @param x this slot's x position in a screen
-     * @param y this slot's y position in a screen
+     * @param x                this slot's x position in a screen
+     * @param y                this slot's y position in a screen
      */
     public SimpleSlot(AspectProvider provider, int x, int y, Predicate<ItemStack> allowedPredicate) {
         this(provider, x, y, allowedPredicate, ItemStack::getMaxStackSize);
@@ -36,11 +36,11 @@ public class SimpleSlot extends AbstractSlot {
 
     /**
      * @param allowedPredicate a predicate for checking whether an item is allowed in this slot
-     * @param maxStack a function for getting the max stack size in this slot of a given item
-     * @param x this slot's x position in a screen
-     * @param y this slot's y position in a screen
+     * @param maxStack         a function for getting the max stack size in this slot of a given item
+     * @param x                this slot's x position in a screen
+     * @param y                this slot's y position in a screen
      */
-    public SimpleSlot(AspectProvider provider, int x, int y, Predicate<ItemStack> allowedPredicate, Function<ItemStack,Integer> maxStack) {
+    public SimpleSlot(AspectProvider provider, int x, int y, Predicate<ItemStack> allowedPredicate, Function<ItemStack, Integer> maxStack) {
         super(provider);
         this.x = x;
         this.y = y;

@@ -1,4 +1,4 @@
-package design.aeonic.nifty.aspect.internal;
+package design.aeonic.nifty.impl.aspect.internal;
 
 import design.aeonic.nifty.api.aspect.AspectProvider;
 import design.aeonic.nifty.api.aspect.internal.item.ItemHandler;
