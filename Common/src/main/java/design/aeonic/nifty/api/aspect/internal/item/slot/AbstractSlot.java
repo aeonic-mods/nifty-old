@@ -11,11 +11,9 @@ import net.minecraft.world.item.ItemStack;
  */
 public abstract class AbstractSlot {
 
-    protected AspectProvider provider;
     protected ItemStack containedStack;
 
-    public AbstractSlot(AspectProvider provider) {
-        this.provider = provider;
+    public AbstractSlot() {
         this.containedStack = ItemStack.EMPTY;
     }
 
@@ -34,11 +32,17 @@ public abstract class AbstractSlot {
     }
 
     /**
-     * Checks whether the given item is allowed in this slot.
+     * Checks whether the given item is allowed in this slot. To make an "output-only" slot, just return false here
+     * and move items to this slot with {@link #forceInsert(ItemStack)}.
      *
      * @param stack the item stack to check
      */
     public abstract boolean allowedInSlot(ItemStack stack);
+
+    /**
+     * Run when this slot's contents have changed; used to mark that an item handler should be reserialized.
+     */
+    public abstract void onChanged();
 
     /**
      * Allows overriding the max stack size for a given item stack.<br><br>
@@ -83,7 +87,7 @@ public abstract class AbstractSlot {
     }
 
     /**
-     * Inserts an item stack to the slot without performing any checks; returns the remainder of the inserted stack.<br><br>
+     * Inserts an item stack to the slot regardless of whether it's allowed in it; returns the remainder of the inserted stack.<br><br>
      * Still respects the max slot stack size and any stack that's already in the slot; in other words, normal insertion behavior, but without the slot's filtering.
      *
      * @param stack the item stack to insert
@@ -105,7 +109,7 @@ public abstract class AbstractSlot {
         }
         // Slot is empty
         containedStack = stack.split(maxStackSize(stack));
-        if (!stack.equals(old)) provider.setDirty();
+        if (!stack.equals(old)) onChanged();
         return stack;
     }
 
@@ -118,7 +122,7 @@ public abstract class AbstractSlot {
      */
     public ItemStack extract(int amount) {
         int amt = Math.min(amount, containedStack.getMaxStackSize());
-        if (amt > 0) provider.setDirty();
+        if (amt > 0) onChanged();
         return containedStack.split(amt);
     }
 

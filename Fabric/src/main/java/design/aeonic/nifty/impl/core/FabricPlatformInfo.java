@@ -1,6 +1,6 @@
 package design.aeonic.nifty.impl.core;
 
-import design.aeonic.nifty.api.core.Platform;
+import design.aeonic.nifty.api.util.Platform;
 import design.aeonic.nifty.api.core.PlatformInfo;
 import net.fabricmc.loader.api.FabricLoader;
 

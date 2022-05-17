@@ -1,5 +1,8 @@
 package design.aeonic.nifty.api.core;
 
+import design.aeonic.nifty.api.aspect.internal.item.ItemHandler;
+import design.aeonic.nifty.api.aspect.internal.item.slot.AbstractSlot;
+import design.aeonic.nifty.api.aspect.internal.item.slot.SimpleSlot;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -15,6 +18,9 @@ import java.util.function.BiFunction;
  */
 public interface Factories {
 
+    /**
+     * Creates a block entity type, avoiding mixins or AWs in common code as Forge and Fabric both provide their own factories.
+     */
     <T extends BlockEntity> BlockEntityType<T> blockEntityType(BiFunction<BlockPos, BlockState, T> constructor, Block... validBlocks);
 
 }
