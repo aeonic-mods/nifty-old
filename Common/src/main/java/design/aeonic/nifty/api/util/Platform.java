@@ -1,4 +1,4 @@
-package design.aeonic.nifty.api.core;
+package design.aeonic.nifty.api.util;
 
 public enum Platform {
     FORGE,

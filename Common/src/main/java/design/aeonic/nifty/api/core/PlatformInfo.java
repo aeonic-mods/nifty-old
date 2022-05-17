@@ -1,5 +1,7 @@
 package design.aeonic.nifty.api.core;
 
+import design.aeonic.nifty.api.util.Platform;
+
 /**
  * Contains information about the current platform.
  */
