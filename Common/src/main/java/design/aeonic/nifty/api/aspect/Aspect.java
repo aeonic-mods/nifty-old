@@ -48,16 +48,13 @@ import java.util.function.Supplier;
 public interface Aspect<T> {
 
     /**
-     * Wraps a given object as an Aspect, and adds a refresh listener to the passed provider.
+     * Wraps a given object as an Aspect.
      *
-     * @param provider the provider exposing this Aspect
      * @param supplier a supplier to update the contained object - should probably be a call to the provider's #getAspect method
      * @return the object, wrapped as an Aspect that will update via the passed supplier when invalidated
      */
-    static <T> Aspect<T> of(AspectProvider provider, Supplier<T> supplier) {
-        Aspect<T> aspect = new SimpleAspect<>(supplier);
-        provider.onRefreshAspects(aspect::refresh);
-        return aspect;
+    static <T> Aspect<T> of(Supplier<T> supplier) {
+        return new SimpleAspect<>(supplier);
     }
 
     /**
@@ -79,6 +76,13 @@ public interface Aspect<T> {
     void refresh();
 
     /**
+     * Checks whether the contained object exists.
+     */
+    default boolean isPresent() {
+        return get().isPresent();
+    }
+
+    /**
      * Identical to {@link #ifPresent(BiFunction)}, but without the Aspect parameter.
      */
     default @Nullable
@@ -96,15 +100,6 @@ public interface Aspect<T> {
         if (get().isPresent())
             return function.apply(this, get().get());
         return null;
-    }
-
-    /**
-     * Casts this aspect to the inferred type for {@link AspectProvider#getAspect}.<br><br>
-     * Will throw an error if the type is invalid; just used to ignore warnings when you've already checked the aspect type.
-     */
-    @SuppressWarnings("unchecked")
-    default <A> Aspect<A> cast() {
-        return (Aspect<A>) this;
     }
 
     /**

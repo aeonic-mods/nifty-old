@@ -4,6 +4,13 @@ import design.aeonic.nifty.api.registry.GameObject;
 import net.minecraft.resources.ResourceLocation;
 
 public record FabricGameObject<T>(ResourceLocation key, T object) implements GameObject<T> {
+    // On Fabric, there are no registry events - objects are registered immediately
+
+    @Override
+    public boolean isRegistered() {
+        return true;
+    }
+
     @Override
     public T get() {
         return object;
@@ -13,4 +20,5 @@ public record FabricGameObject<T>(ResourceLocation key, T object) implements Gam
     public T getOrNull() {
         return object;
     }
+
 }

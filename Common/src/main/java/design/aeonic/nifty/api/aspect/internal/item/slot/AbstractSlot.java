@@ -1,6 +1,5 @@
 package design.aeonic.nifty.api.aspect.internal.item.slot;
 
-import design.aeonic.nifty.api.aspect.AspectProvider;
 import design.aeonic.nifty.api.aspect.internal.item.ItemHandler;
 import net.minecraft.world.item.ItemStack;
 
@@ -11,11 +10,9 @@ import net.minecraft.world.item.ItemStack;
  */
 public abstract class AbstractSlot {
 
-    protected AspectProvider provider;
     protected ItemStack containedStack;
 
-    public AbstractSlot(AspectProvider provider) {
-        this.provider = provider;
+    public AbstractSlot() {
         this.containedStack = ItemStack.EMPTY;
     }
 
@@ -34,11 +31,17 @@ public abstract class AbstractSlot {
     }
 
     /**
-     * Checks whether the given item is allowed in this slot.
+     * Checks whether the given item is allowed in this slot. To make an "output-only" slot, just return false here
+     * and move items to this slot with {@link #forceInsert(ItemStack)}.
      *
      * @param stack the item stack to check
      */
     public abstract boolean allowedInSlot(ItemStack stack);
+
+    /**
+     * Run when this slot's contents have changed; used to mark that an item handler should be reserialized.
+     */
+    public abstract void onChanged();
 
     /**
      * Allows overriding the max stack size for a given item stack.<br><br>
@@ -83,7 +86,7 @@ public abstract class AbstractSlot {
     }
 
     /**
-     * Inserts an item stack to the slot without performing any checks; returns the remainder of the inserted stack.<br><br>
+     * Inserts an item stack to the slot regardless of whether it's allowed in it; returns the remainder of the inserted stack.<br><br>
      * Still respects the max slot stack size and any stack that's already in the slot; in other words, normal insertion behavior, but without the slot's filtering.
      *
      * @param stack the item stack to insert
@@ -105,21 +108,19 @@ public abstract class AbstractSlot {
         }
         // Slot is empty
         containedStack = stack.split(maxStackSize(stack));
-        if (!stack.equals(old)) provider.setDirty();
+        if (!stack.equals(old)) onChanged();
         return stack;
     }
 
     /**
-     * Attempts to extract the given amount, modifying the slot's stored item immediately and returning the extracted stack. Ignores direction checks.<br><br>
-     * Extracts at most the smaller of {@code amount} and the contained item's max stack size.<br><br>
+     * Attempts to extract the given amount, modifying the slot's stored item immediately and returning the extracted stack.<br><br>
      *
      * @param amount the amount to extract
      * @return the extracted stack; an empty stack if extraction failed or the slot is empty
      */
     public ItemStack extract(int amount) {
-        int amt = Math.min(amount, containedStack.getMaxStackSize());
-        if (amt > 0) provider.setDirty();
-        return containedStack.split(amt);
+        if (amount > 0) onChanged();
+        return containedStack.split(amount);
     }
 
     /**

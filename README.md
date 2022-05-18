@@ -13,20 +13,31 @@ Nifty is a cross-platform library mod that serves as a basis for tech mods targe
     * On Fabric, objects are registered directly and available immediately in the order the `register` method is called
     * On Forge, registry is deferred to the correct Forge event via the new resource key `DeferredRegister`
       support ([#8527](https://github.com/MinecraftForge/MinecraftForge/pull/8527))
+      * May be subject to change as this only works for 1.18.2+
+* Aspects
+  * Original system closely mirrored Forge capabilities
+  * New system is more close to the Fabric API lookup system
+    * Aspect classes can be registered, then callbacks to certain objects that might contain them can be registered
+    * On Fabric, this directly translates to the API lookup system
+    * On Forge, lookups are tied into `getCapability` and aspects are registered as capabilities
+  * Mods backed by Nifty can access Aspects registered by other mods through Nifty conditionally
+  * Mods backed by Nifty can access implementations provided by other mods to a specific platform's system
+    * On Forge, Aspect lookups can be used to get any registered capability
+    * Registering an aspect interface on Fabric that already exists in the API lookup will just delegate lookups to the existing system
+  * Mods that are _not_ backed by Nifty can access any Aspect registered through Nifty via a specific platform's system
+    * A mod running on Forge can access a specific Aspect without depending on Nifty, just by using `getCapability`
+    * A Fabric mod can access any Aspect without depending on Nifty by using the API lookup system
+  * Some internal Aspects
+    * Item handlers, with complete compatibility for existing Forge IItemHandlers and the Fabric transfer api
+      * Includes a simplified implementation using Slot objects to describe an inventory's functionality
+    * Fluid handlers, same as above (under construction)
+    * Energy handlers, same as above + compat for Tech Reborn's energy api (under construction)
 
 ### Planned
 
-* Some generic abstracted capabilities - "Aspects"
-    * End goal: Fabric or Forge-only mods can utilize the Aspect interface and any object that provides it
-        * In other words, any mod that wants compatibility with a mod that defines an Aspect can do so through its
-          platform's system - Capabilities on Forge, or API transactions on Fabric
-        * Of course, mods depending on Nifty can just use Aspects without the extra handling code
-        * This should be inherent to the implementation anyway as they need to be accessible on both platforms
-    * Abstracted systems for item & fluid handling etc
-        * Item + fluid transfer systems
-    * Defer to Forge caps or the Fabric API lookup system
+* Aspect updates
     * Abstracted power system, with easy implementation on blocks and items
-        * Use [Tech Reborn's energy API](https://github.com/TechReborn/Energy) on Fabric
+        * Compat with [Tech Reborn's energy API](https://github.com/TechReborn/Energy) on Fabric
     * Interoperability with a simplified UI system, somewhat akin to Extra Utils' old machine interface mechanics
         * Easy I/O definitions in the blockentity that can be referenced and displayed with ease from a screen
         * Energy usage over time graph like Satisfactory's would be very cool
@@ -34,11 +45,13 @@ Nifty is a cross-platform library mod that serves as a basis for tech mods targe
 * Abstract processing implementations
     * Easily create recipes
     * Base block and BE classes to utilize those recipes
+    * Tie into Aspect-based blockentities and menu/screens
 * Rendering hooks
     * Holograms
     * UI abstraction
-        * Selection systems with item settings and syncing
-            * Radial menus from abandoned multitool project
+      * Modular screens for block entities (so, menus too) + standalone screens
+      * Selection systems with item settings and syncing
+          * Radial menus from abandoned multitool project
     * Math & other rendering utils
 * Abstracted configs
     * Avoid the extra dependency on Forge

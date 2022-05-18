@@ -8,21 +8,14 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public final class ForgeAspect<T> implements Aspect<T> {
+public class ForgeAspect<T> implements Aspect<T> {
 
     private final Supplier<LazyOptional<T>> supplier;
     private LazyOptional<T> cached;
 
-    private ForgeAspect(Supplier<LazyOptional<T>> supplier) {
+    public ForgeAspect(Supplier<LazyOptional<T>> supplier) {
         this.supplier = supplier;
-        this.cached = supplier.get();
-        this.cached.addListener($ -> refresh());
-    }
-
-    static <T> ForgeAspect<T> of(AspectProvider provider, Supplier<LazyOptional<T>> supplier) {
-        ForgeAspect<T> aspect = new ForgeAspect<>(supplier);
-        provider.onRefreshAspects(aspect::refresh);
-        return aspect;
+        refresh();
     }
 
     @Override
@@ -33,31 +26,34 @@ public final class ForgeAspect<T> implements Aspect<T> {
     @Override
     public void refresh() {
         cached = supplier.get();
+        cached.addListener($ -> refresh());
     }
 
-    public <R> Wrapper<T, R> wrap(Function<T, R> wrapperFunction) {
-        return new Wrapper<>(this, wrapperFunction);
-    }
+    public static class Wrapping<A, B> implements Aspect<B> {
 
-    public static final class Wrapper<A, B> implements Aspect<B> {
+        private final Supplier<LazyOptional<A>> supplier;
+        private final Function<A, B> wrappingFunc;
+        private LazyOptional<A> cached;
 
-        private final ForgeAspect<A> aspect;
-        private final Function<A, B> wrapperFunction;
-
-        private Wrapper(ForgeAspect<A> aspect, Function<A, B> wrapperFunction) {
-            this.aspect = aspect;
-            this.wrapperFunction = wrapperFunction;
+        public Wrapping(Supplier<LazyOptional<A>> supplier, Function<A, B> wrappingFunc) {
+            this.supplier = supplier;
+            this.wrappingFunc = wrappingFunc;
+            refresh();
         }
 
         @Override
         public Optional<B> get() {
-            return Optional.ofNullable(aspect.ifPresent(wrapperFunction));
+            Optional<A> res = cached.resolve();
+            return res.map(wrappingFunc);
         }
 
         @Override
         public void refresh() {
-            aspect.refresh();
+            cached = supplier.get();
+            if (cached.isPresent())
+                cached.addListener($ -> refresh());
         }
+
     }
 
 }

@@ -1,4 +1,4 @@
-package design.aeonic.nifty.api.core;
+package design.aeonic.nifty.api.util;
 
 import java.util.ServiceLoader;
 
@@ -8,7 +8,7 @@ public class Services {
         final T loadedService = ServiceLoader.load(clazz)
                 .findFirst()
                 .orElseThrow(() -> new NullPointerException("Failed to load service for " + clazz.getName()));
-        Constants.NIFTY_LOG.debug("Loaded {} for service {}", loadedService, clazz);
+        Constants.LOGGER.debug("Loaded {} for service {}", loadedService, clazz);
         return loadedService;
     }
 
