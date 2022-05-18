@@ -24,6 +24,13 @@ public record ItemVariantStorageWrapper(Storage<ItemVariant> storage) implements
     }
 
     @Override
+    public boolean allowedInSlot(int slot, ItemStack stack) {
+        // When actual insertion is tried the backing Storage should just treat the input correctly if it's
+        // not allowed. Not much we could do here, besides iterate and check the itemvariant in each "slot"
+        return true;
+    }
+
+    @Override
     public ItemStack insert(ItemStack stack, boolean simulate) {
         if (stack.isEmpty()) return stack;
         Transaction transaction = Transaction.openNested(Transaction.getCurrentUnsafe());

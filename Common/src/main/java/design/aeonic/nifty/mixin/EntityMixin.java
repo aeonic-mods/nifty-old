@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(Entity.class)
-public class FabricEntityMixin implements AspectProvider<Entity> {
+public class EntityMixin implements AspectProvider<Entity> {
 
     List<Runnable> refreshCallbacks = new ArrayList<>();
 

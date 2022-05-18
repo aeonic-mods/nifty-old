@@ -7,8 +7,6 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.function.BiPredicate;
 
 /**
@@ -22,6 +20,11 @@ public class SimpleItemHandler implements ItemHandler {
 
     public SimpleItemHandler(AbstractSlot... slots) {
         this.slots = slots;
+    }
+
+    @Override
+    public boolean allowedInSlot(int slot, ItemStack stack) {
+        return getSlot(slot).allowedInSlot(stack);
     }
 
     @Override

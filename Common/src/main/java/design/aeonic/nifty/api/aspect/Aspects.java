@@ -1,8 +1,5 @@
 package design.aeonic.nifty.api.aspect;
 
-import design.aeonic.nifty.api.aspect.internal.item.ItemHandler;
-import design.aeonic.nifty.api.aspect.internal.item.slot.AbstractSlot;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -74,7 +71,7 @@ public interface Aspects {
      * practice, the return from these callbacks will always be wrapped in an {@link Aspect} object for caching
      * (when called from Nifty). External mods accessing these objects will get whatever integrates with their platform
      * - on Fabric, just the object from an ApiLookup call; on Forge, a LazyOptional.<br><br>
-     * {@link #registerNarrowCallback(Class, BlockEntityAspectCallback, BlockEntityType[])}  should be used if you're only
+     * {@link #registerNarrowCallback(Class, BlockEntityAspectLookup, BlockEntityType[])}  should be used if you're only
      * exposing this aspect from specific items.
      * Using this method will result in more queries overall, and in turn worse performance.<br><br>
      * Regarding callbacks: if the passed direction is null, the aspect should be exposed regardless of what directions
@@ -82,33 +79,33 @@ public interface Aspects {
      * The Aspect must be registered first via {@link #registerAspect}.
      * @param aspectClass the base class of the aspect to register this callback for
      */
-    <T> void registerCallback(Class<T> aspectClass, BlockEntityAspectCallback<T> callbacks);
+    <T> void registerCallback(Class<T> aspectClass, BlockEntityAspectLookup<T> callbacks);
 
     /**
      * Registers callbacks used to find Aspects given an entity. The callback can return null; in
      * practice, the return from these callbacks will always be wrapped in an {@link Aspect} object for caching
      * (when called from Nifty). External mods accessing these objects will get whatever integrates with their platform
      * - on Fabric, just the object from an ApiLookup call; on Forge, a LazyOptional.<br><br>
-     * {@link #registerNarrowCallback(Class, EntityAspectCallback, EntityType[])}  should be used if you're only
+     * {@link #registerNarrowCallback(Class, EntityAspectLookup, EntityType[])}  should be used if you're only
      * exposing this aspect from specific items.
      * Using this method will result in more queries overall, and in turn worse performance.<br><br>
      * The Aspect must be registered first via {@link #registerAspect}.
      * @param aspectClass the base class of the aspect to register this callback for
      */
-    <T> void registerCallback(Class<T> aspectClass, EntityAspectCallback<T> callbacks);
+    <T> void registerCallback(Class<T> aspectClass, EntityAspectLookup<T> callbacks);
 
     /**
      * Registers callbacks used to find Aspects given an item stack. The callback can return null; in
      * practice, the return from these callbacks will always be wrapped in an {@link Aspect} object for caching
      * (when called from Nifty). External mods accessing these objects will get whatever integrates with their platform
      * - on Fabric, just the object from an ApiLookup call; on Forge, a LazyOptional.<br><br>
-     * {@link #registerNarrowCallback(Class, ItemStackAspectCallback, ItemLike...)} should be used if you're only
+     * {@link #registerNarrowCallback(Class, ItemStackAspectLookup, ItemLike...)} should be used if you're only
      * exposing this aspect from specific items.
      * Using this method will result in more queries overall, and in turn worse performance.<br><br>
      * The Aspect must be registered first via {@link #registerAspect}.
      * @param aspectClass the base class of the aspect to register this callback for
      */
-    <T> void registerCallback(Class<T> aspectClass, ItemStackAspectCallback<T> callbacks);
+    <T> void registerCallback(Class<T> aspectClass, ItemStackAspectLookup<T> callbacks);
 
     /**
      * Registers callbacks used to find Aspects given a blockentity, only for a specific blockentity type. Results in
@@ -118,7 +115,7 @@ public interface Aspects {
      * The Aspect must be registered first via {@link #registerAspect}.
      * @param aspectClass the base class of the aspect to register this callback for
      */
-    <T> void registerNarrowCallback(Class<T> aspectClass, BlockEntityAspectCallback<T> callback, BlockEntityType<?>... blockEntityTypes);
+    <T> void registerNarrowCallback(Class<T> aspectClass, BlockEntityAspectLookup<T> callback, BlockEntityType<?>... blockEntityTypes);
 
     /**
      * Registers callbacks used to find Aspects given an entity, only for a specific entity type. Results in
@@ -126,7 +123,7 @@ public interface Aspects {
      * The Aspect must be registered first via {@link #registerAspect}.
      * @param aspectClass the base class of the aspect to register this callback for
      */
-    <T> void registerNarrowCallback(Class<T> aspectClass, EntityAspectCallback<T> callback, EntityType<?>... entityTypes);
+    <T> void registerNarrowCallback(Class<T> aspectClass, EntityAspectLookup<T> callback, EntityType<?>... entityTypes);
 
     /**
      * Registers callbacks used to find Aspects given an item stack, only for a specific item type. Results in
@@ -134,20 +131,20 @@ public interface Aspects {
      * The Aspect must be registered first via {@link #registerAspect}.
      * @param aspectClass the base class of the aspect to register this callback for
      */
-    <T> void registerNarrowCallback(Class<T> aspectClass, ItemStackAspectCallback<T> callback, ItemLike... items);
+    <T> void registerNarrowCallback(Class<T> aspectClass, ItemStackAspectLookup<T> callback, ItemLike... items);
 
     @FunctionalInterface
-    interface ItemStackAspectCallback<T> {
+    interface ItemStackAspectLookup<T> {
         @Nullable T find(ItemStack stack);
     }
 
     @FunctionalInterface
-    interface BlockEntityAspectCallback<T> {
+    interface BlockEntityAspectLookup<T> {
         @Nullable T find(BlockEntity be, @Nullable Direction direction);
     }
 
     @FunctionalInterface
-    interface EntityAspectCallback<T> {
+    interface EntityAspectLookup<T> {
         @Nullable T find(Entity entity);
     }
 

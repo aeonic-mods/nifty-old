@@ -24,13 +24,8 @@ public final class FabricItemHandler implements ItemHandler, Storage<ItemVariant
     }
 
     @Override
-    public CompoundTag serialize(CompoundTag tag) {
-        return parent.serialize(tag);
-    }
-
-    @Override
-    public void deserialize(CompoundTag tag) {
-        parent.deserialize(tag);
+    public boolean allowedInSlot(int slot, ItemStack stack) {
+        return parent.allowedInSlot(slot, stack);
     }
 
     @Override
@@ -71,6 +66,16 @@ public final class FabricItemHandler implements ItemHandler, Storage<ItemVariant
     @Override
     public void set(int slot, ItemStack stack) {
         parent.set(slot, stack);
+    }
+
+    @Override
+    public CompoundTag serialize(CompoundTag tag) {
+        return parent.serialize(tag);
+    }
+
+    @Override
+    public void deserialize(CompoundTag tag) {
+        parent.deserialize(tag);
     }
 
     @Override

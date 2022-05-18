@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(ItemStack.class)
-public abstract class FabricItemStackMixin implements AspectProvider<ItemStack> {
+public abstract class ItemStackMixin implements AspectProvider<ItemStack> {
 
     List<Runnable> refreshCallbacks = new ArrayList<>();
 

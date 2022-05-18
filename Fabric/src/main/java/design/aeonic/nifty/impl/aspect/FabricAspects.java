@@ -19,27 +19,27 @@ import java.util.Map;
 
 public class FabricAspects implements Aspects {
 
-    public static final Map<Class<?>, BlockApiLookup<?, Direction>> BLOCK_LOOKUP_MAP = new HashMap<>();
-    public static final Map<Class<?>, EntityApiLookup<?, Direction>> ENTITY_LOOKUP_MAP = new HashMap<>();
-    public static final Map<Class<?>, ItemApiLookup<?, Direction>> ITEM_LOOKUP_MAP = new HashMap<>();
+    private final Map<Class<?>, BlockApiLookup<?, Direction>> blockLookupMap = new HashMap<>();
+    private final Map<Class<?>, EntityApiLookup<?, Direction>> entityLookupMap = new HashMap<>();
+    private final Map<Class<?>, ItemApiLookup<?, Direction>> itemLookupMap = new HashMap<>();
 
     @Override
     public boolean exists(Class<?> aspectClass) {
-        return BLOCK_LOOKUP_MAP.containsKey(aspectClass);
+        return blockLookupMap.containsKey(aspectClass);
     }
 
     @Override
     public <T> void registerAspect(ResourceLocation id, Class<T> aspectClass) {
-        BLOCK_LOOKUP_MAP.computeIfAbsent(aspectClass, clazz -> BlockApiLookup.get(id, clazz, Direction.class));
-        ENTITY_LOOKUP_MAP.computeIfAbsent(aspectClass, clazz -> EntityApiLookup.get(id, clazz, Direction.class));
-        ITEM_LOOKUP_MAP.computeIfAbsent(aspectClass, clazz -> ItemApiLookup.get(id, clazz, Direction.class));
+        blockLookupMap.computeIfAbsent(aspectClass, clazz -> BlockApiLookup.get(id, clazz, Direction.class));
+        entityLookupMap.computeIfAbsent(aspectClass, clazz -> EntityApiLookup.get(id, clazz, Direction.class));
+        itemLookupMap.computeIfAbsent(aspectClass, clazz -> ItemApiLookup.get(id, clazz, Direction.class));
     }
 
     // We don't need to cache these lookups, since the actual Aspect object does the caching for us if used properly
     @SuppressWarnings("unchecked")
     @Override
     public <T> Aspect<T> query(Class<T> aspectClass, BlockEntity be, Direction direction) {
-        BlockApiLookup<T, Direction> lookup = (BlockApiLookup<T, Direction>) BLOCK_LOOKUP_MAP.get(aspectClass);
+        BlockApiLookup<T, Direction> lookup = (BlockApiLookup<T, Direction>) blockLookupMap.get(aspectClass);
         if (lookup != null && be != null) {
             return Aspect.of(() -> lookup.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, direction));
         }
@@ -49,7 +49,7 @@ public class FabricAspects implements Aspects {
     @SuppressWarnings("unchecked")
     @Override
     public <T> Aspect<T> query(Class<T> aspectClass, Entity entity) {
-        EntityApiLookup<T, Direction> lookup = (EntityApiLookup<T, Direction>) ENTITY_LOOKUP_MAP.get(aspectClass);
+        EntityApiLookup<T, Direction> lookup = (EntityApiLookup<T, Direction>) entityLookupMap.get(aspectClass);
         if (lookup != null) {
             return Aspect.of(() -> lookup.find(entity, null));
         }
@@ -59,7 +59,7 @@ public class FabricAspects implements Aspects {
     @SuppressWarnings("unchecked")
     @Override
     public <T> Aspect<T> query(Class<T> aspectClass, ItemStack stack) {
-        ItemApiLookup<T, Direction> lookup = (ItemApiLookup<T, Direction>) ITEM_LOOKUP_MAP.get(aspectClass);
+        ItemApiLookup<T, Direction> lookup = (ItemApiLookup<T, Direction>) itemLookupMap.get(aspectClass);
         if (lookup != null) {
             return Aspect.of(() -> lookup.find(stack, null));
         }
@@ -68,38 +68,38 @@ public class FabricAspects implements Aspects {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void registerCallback(Class<T> aspectClass, BlockEntityAspectCallback<T> callback) {
-        ((BlockApiLookup<T, Direction>) BLOCK_LOOKUP_MAP.get(aspectClass)).registerFallback(((world, pos, state, be, dir) -> be == null || be.isRemoved() ? null : callback.find(be, dir)));
+    public <T> void registerCallback(Class<T> aspectClass, BlockEntityAspectLookup<T> callback) {
+        ((BlockApiLookup<T, Direction>) blockLookupMap.get(aspectClass)).registerFallback(((world, pos, state, be, dir) -> be == null || be.isRemoved() ? null : callback.find(be, dir)));
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void registerCallback(Class<T> aspectClass, EntityAspectCallback<T> callback) {
-        ((EntityApiLookup<T, Direction>) ENTITY_LOOKUP_MAP.get(aspectClass)).registerFallback((entity, $) -> entity == null || entity.isRemoved() ? null : callback.find(entity));
+    public <T> void registerCallback(Class<T> aspectClass, EntityAspectLookup<T> callback) {
+        ((EntityApiLookup<T, Direction>) entityLookupMap.get(aspectClass)).registerFallback((entity, $) -> entity == null || entity.isRemoved() ? null : callback.find(entity));
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void registerCallback(Class<T> aspectClass, ItemStackAspectCallback<T> callback) {
-        ((ItemApiLookup<T, Direction>) ITEM_LOOKUP_MAP.get(aspectClass)).registerFallback((stack, $) -> stack == null || stack.isEmpty() ? null : callback.find(stack));
+    public <T> void registerCallback(Class<T> aspectClass, ItemStackAspectLookup<T> callback) {
+        ((ItemApiLookup<T, Direction>) itemLookupMap.get(aspectClass)).registerFallback((stack, $) -> stack == null || stack.isEmpty() ? null : callback.find(stack));
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void registerNarrowCallback(Class<T> aspectClass, BlockEntityAspectCallback<T> callback, BlockEntityType<?>... blockEntityTypes) {
-        ((BlockApiLookup<T, Direction>) BLOCK_LOOKUP_MAP.get(aspectClass)).registerForBlockEntities((be, dir) -> be == null || be.isRemoved() ? null : callback.find(be, dir), blockEntityTypes);
+    public <T> void registerNarrowCallback(Class<T> aspectClass, BlockEntityAspectLookup<T> callback, BlockEntityType<?>... blockEntityTypes) {
+        ((BlockApiLookup<T, Direction>) blockLookupMap.get(aspectClass)).registerForBlockEntities((be, dir) -> be == null || be.isRemoved() ? null : callback.find(be, dir), blockEntityTypes);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void registerNarrowCallback(Class<T> aspectClass, EntityAspectCallback<T> callback, EntityType<?>... entityTypes) {
-        ((EntityApiLookup<T, Direction>) ENTITY_LOOKUP_MAP.get(aspectClass)).registerForTypes((entity, $) -> entity == null || entity.isRemoved() ? null : callback.find(entity), entityTypes);
+    public <T> void registerNarrowCallback(Class<T> aspectClass, EntityAspectLookup<T> callback, EntityType<?>... entityTypes) {
+        ((EntityApiLookup<T, Direction>) entityLookupMap.get(aspectClass)).registerForTypes((entity, $) -> entity == null || entity.isRemoved() ? null : callback.find(entity), entityTypes);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void registerNarrowCallback(Class<T> aspectClass, ItemStackAspectCallback<T> callback, ItemLike... items) {
-        ((ItemApiLookup<T, Direction>) ITEM_LOOKUP_MAP.get(aspectClass)).registerForItems((stack, $) -> stack == null || stack.isEmpty() ? null : callback.find(stack), items);
+    public <T> void registerNarrowCallback(Class<T> aspectClass, ItemStackAspectLookup<T> callback, ItemLike... items) {
+        ((ItemApiLookup<T, Direction>) itemLookupMap.get(aspectClass)).registerForItems((stack, $) -> stack == null || stack.isEmpty() ? null : callback.find(stack), items);
     }
 
 }

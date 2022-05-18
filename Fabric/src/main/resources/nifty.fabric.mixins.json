@@ -4,9 +4,6 @@
   "package": "design.aeonic.nifty.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "FabricBlockEntityMixin",
-    "FabricEntityMixin",
-    "FabricItemStackMixin"
   ],
   "client": [],
   "injectors": {

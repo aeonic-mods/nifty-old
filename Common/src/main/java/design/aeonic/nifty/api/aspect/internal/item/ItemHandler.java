@@ -19,6 +19,11 @@ import java.util.function.Predicate;
 public interface ItemHandler {
 
     /**
+     * Checks whether the given stack can be inserted into the slot at the given index.
+     */
+    boolean allowedInSlot(int slot, ItemStack stack);
+
+    /**
      * Same as {@link #insert(int, ItemStack, boolean)}, but inserts to the first available slot, filling empty slots and
      * stacking with whatever it can.
      */
