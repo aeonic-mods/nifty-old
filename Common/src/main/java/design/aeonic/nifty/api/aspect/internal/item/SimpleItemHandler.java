@@ -59,7 +59,7 @@ public class SimpleItemHandler implements ItemHandler {
 
     @Override
     public ItemStack extract(int slot, int amount, boolean simulate) {
-        if (!simulate) getSlot(slot).extract(amount);
+        if (!simulate) return getSlot(slot).extract(amount);
         ItemStack old = get(slot).copy();
         ItemStack ret = getSlot(slot).extract(amount);
         set(slot, old);

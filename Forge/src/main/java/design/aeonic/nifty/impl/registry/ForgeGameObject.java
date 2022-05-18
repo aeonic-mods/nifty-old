@@ -11,6 +11,11 @@ public record ForgeGameObject<T>(RegistryObject<T> object) implements GameObject
     }
 
     @Override
+    public boolean isRegistered() {
+        return object.isPresent();
+    }
+
+    @Override
     public T get() {
         return object.get();
     }

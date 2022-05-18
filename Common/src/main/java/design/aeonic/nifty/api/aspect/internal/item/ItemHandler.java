@@ -44,7 +44,6 @@ public interface ItemHandler {
     /**
      * Attempts to extract the given amount from any slot of the given resource. In most cases, {@link #insert(ItemStack, boolean)}
      * should be used instead for better performance on Forgen't.<br><br>
-     * Extracts at most the smallest of `amount` and the contained item's max stack size.
      * @param itemPredicate a predicate that must be met for a stack to be extracted
      * @param amount the amount to extract
      * @param simulate if true, doesn't make any changes to stored contents
@@ -55,7 +54,6 @@ public interface ItemHandler {
     /**
      * Attempts to extract the given amount from the given slot, returning the extracted stack.In most cases,
      * {@link #extract(BiPredicate, int, boolean)} should be used instead for better performance on Forgen't.<br><br>
-     * Extracts at most the smallest of `amount` and the contained item's max stack size.
      *
      * @param slot the slot index to extract from
      * @param amount  the amount to extract
