@@ -20,5 +20,5 @@ public interface Registrar {
      * @param object   a supplier for the object to register
      * @return a {@link GameObject} with the given registry key and a memoized supplier for the object
      */
-    <T> GameObject<T> register(Registry<? super T> registry, ResourceLocation key, Supplier<T> object);
+    <R, T extends R> GameObject<T> register(Registry<R> registry, ResourceLocation key, Supplier<T> object);
 }

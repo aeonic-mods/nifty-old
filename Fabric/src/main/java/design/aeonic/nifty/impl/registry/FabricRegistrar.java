@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 
 public class FabricRegistrar implements Registrar {
     @Override
-    public <T> GameObject<T> register(Registry<? super T> registry, ResourceLocation key, Supplier<T> object) {
+    public <R, T extends R> GameObject<T> register(Registry<R> registry, ResourceLocation key, Supplier<T> object) {
         return new FabricGameObject<>(key, Registry.register(registry, key, object.get()));
     }
 }

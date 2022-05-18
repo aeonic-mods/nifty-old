@@ -26,7 +26,8 @@ public class ForgeAspect<T> implements Aspect<T> {
     @Override
     public void refresh() {
         cached = supplier.get();
-        cached.addListener($ -> refresh());
+        if (cached.isPresent())
+            cached.addListener($ -> refresh());
     }
 
     public static class Wrapping<A, B> implements Aspect<B> {

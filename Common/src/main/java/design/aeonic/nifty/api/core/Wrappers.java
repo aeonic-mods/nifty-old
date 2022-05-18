@@ -1,7 +1,6 @@
 package design.aeonic.nifty.api.core;
 
-import design.aeonic.nifty.api.aspect.internal.item.ItemHandler;
-import design.aeonic.nifty.api.aspect.internal.item.slot.SimpleSlot;
+import design.aeonic.nifty.api.aspect.internal.ItemHandler;
 
 public interface Wrappers {
 

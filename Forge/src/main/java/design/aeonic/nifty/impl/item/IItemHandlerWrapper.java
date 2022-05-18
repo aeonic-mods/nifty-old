@@ -1,6 +1,6 @@
-package design.aeonic.nifty.impl.aspect.internal.item;
+package design.aeonic.nifty.impl.item;
 
-import design.aeonic.nifty.api.aspect.internal.item.ItemHandler;
+import design.aeonic.nifty.api.aspect.internal.ItemHandler;
 import design.aeonic.nifty.api.util.Constants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;

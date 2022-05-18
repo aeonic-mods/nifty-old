@@ -97,12 +97,11 @@ public class ForgeAspects implements Aspects {
         queue.clear();
     }
 
-    @SuppressWarnings("unchecked")
     private <T> void processAspectCap(RegisterCapabilitiesEvent event, Class<T> aspectClass) {
         // If the Aspect was already registered with a wrapper etc don't overwrite anything
         if (aspectCaps.containsKey(aspectClass)) return;
 
-        Capability<T> cap = (Capability<T>) ((CapabilityManagerAccess) ((Object) CapabilityManager.INSTANCE))
+        Capability<T> cap = ((CapabilityManagerAccess) ((Object) CapabilityManager.INSTANCE))
                 .callGet(Type.getInternalName(aspectClass), false);
 
         if (cap.isRegistered())
@@ -260,17 +259,17 @@ public class ForgeAspects implements Aspects {
     }
 
     @Override
-    public <T> void registerCallback(Class<T> aspectClass, BlockEntityAspectLookup<T> callback) {
+    public <T> void registerLookup(Class<T> aspectClass, BlockEntityAspectLookup<T> callback) {
         blockLookups.put(aspectClass, callback);
     }
 
     @Override
-    public <T> void registerCallback(Class<T> aspectClass, EntityAspectLookup<T> callback) {
+    public <T> void registerLookup(Class<T> aspectClass, EntityAspectLookup<T> callback) {
         entityLookups.put(aspectClass, callback);
     }
 
     @Override
-    public <T> void registerCallback(Class<T> aspectClass, ItemStackAspectLookup<T> callback) {
+    public <T> void registerLookup(Class<T> aspectClass, ItemStackAspectLookup<T> callback) {
         itemLookups.put(aspectClass, callback);
     }
 
@@ -279,19 +278,19 @@ public class ForgeAspects implements Aspects {
     // TODO: Profiling, see if this actually does what it should + has a worthwhile performance increase
 
     @Override
-    public <T> void registerNarrowCallback(Class<T> aspectClass, BlockEntityAspectLookup<T> callback, BlockEntityType<?>... blockEntityTypes) {
+    public <T> void registerNarrowLookup(Class<T> aspectClass, BlockEntityAspectLookup<T> callback, BlockEntityType<?>... blockEntityTypes) {
         List<BlockEntityType<?>> types = Arrays.asList(blockEntityTypes);
         addOrInsert(blockLookups.get(aspectClass), (be, dir) -> be == null || !types.contains(be.getType()) ? null : callback.find(be, dir));
     }
 
     @Override
-    public <T> void registerNarrowCallback(Class<T> aspectClass, EntityAspectLookup<T> callback, EntityType<?>... entityTypes) {
+    public <T> void registerNarrowLookup(Class<T> aspectClass, EntityAspectLookup<T> callback, EntityType<?>... entityTypes) {
         List<EntityType<?>> types = Arrays.asList(entityTypes);
         addOrInsert(entityLookups.get(aspectClass), entity -> entity == null || !types.contains(entity.getType()) ? null : callback.find(entity));
     }
 
     @Override
-    public <T> void registerNarrowCallback(Class<T> aspectClass, ItemStackAspectLookup<T> callback, ItemLike... items) {
+    public <T> void registerNarrowLookup(Class<T> aspectClass, ItemStackAspectLookup<T> callback, ItemLike... items) {
         List<ItemLike> itemList = Arrays.asList(items);
         addOrInsert(itemLookups.get(aspectClass), stack -> stack == null || !itemList.contains(stack.getItem()) ? null : callback.find(stack));
     }

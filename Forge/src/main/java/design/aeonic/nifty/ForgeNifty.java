@@ -1,11 +1,10 @@
 package design.aeonic.nifty;
 
-import design.aeonic.nifty.api.aspect.internal.item.ItemHandler;
+import design.aeonic.nifty.api.aspect.internal.ItemHandler;
 import design.aeonic.nifty.api.util.Constants;
 import design.aeonic.nifty.impl.aspect.ForgeAspects;
-import design.aeonic.nifty.impl.aspect.internal.item.ForgeItemHandler;
-import design.aeonic.nifty.impl.aspect.internal.item.IItemHandlerWrapper;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import design.aeonic.nifty.impl.item.ForgeItemHandler;
+import design.aeonic.nifty.impl.item.IItemHandlerWrapper;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -28,4 +27,5 @@ public class ForgeNifty {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(EventPriority.LOWEST, ASPECTS::processAspectCaps);
         FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLClientSetupEvent event) -> Nifty.clientInit());
     }
+
 }

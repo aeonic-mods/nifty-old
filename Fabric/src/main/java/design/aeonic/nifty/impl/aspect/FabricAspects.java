@@ -68,37 +68,37 @@ public class FabricAspects implements Aspects {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void registerCallback(Class<T> aspectClass, BlockEntityAspectLookup<T> callback) {
+    public <T> void registerLookup(Class<T> aspectClass, BlockEntityAspectLookup<T> callback) {
         ((BlockApiLookup<T, Direction>) blockLookupMap.get(aspectClass)).registerFallback(((world, pos, state, be, dir) -> be == null || be.isRemoved() ? null : callback.find(be, dir)));
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void registerCallback(Class<T> aspectClass, EntityAspectLookup<T> callback) {
+    public <T> void registerLookup(Class<T> aspectClass, EntityAspectLookup<T> callback) {
         ((EntityApiLookup<T, Direction>) entityLookupMap.get(aspectClass)).registerFallback((entity, $) -> entity == null || entity.isRemoved() ? null : callback.find(entity));
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void registerCallback(Class<T> aspectClass, ItemStackAspectLookup<T> callback) {
+    public <T> void registerLookup(Class<T> aspectClass, ItemStackAspectLookup<T> callback) {
         ((ItemApiLookup<T, Direction>) itemLookupMap.get(aspectClass)).registerFallback((stack, $) -> stack == null || stack.isEmpty() ? null : callback.find(stack));
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void registerNarrowCallback(Class<T> aspectClass, BlockEntityAspectLookup<T> callback, BlockEntityType<?>... blockEntityTypes) {
+    public <T> void registerNarrowLookup(Class<T> aspectClass, BlockEntityAspectLookup<T> callback, BlockEntityType<?>... blockEntityTypes) {
         ((BlockApiLookup<T, Direction>) blockLookupMap.get(aspectClass)).registerForBlockEntities((be, dir) -> be == null || be.isRemoved() ? null : callback.find(be, dir), blockEntityTypes);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void registerNarrowCallback(Class<T> aspectClass, EntityAspectLookup<T> callback, EntityType<?>... entityTypes) {
+    public <T> void registerNarrowLookup(Class<T> aspectClass, EntityAspectLookup<T> callback, EntityType<?>... entityTypes) {
         ((EntityApiLookup<T, Direction>) entityLookupMap.get(aspectClass)).registerForTypes((entity, $) -> entity == null || entity.isRemoved() ? null : callback.find(entity), entityTypes);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void registerNarrowCallback(Class<T> aspectClass, ItemStackAspectLookup<T> callback, ItemLike... items) {
+    public <T> void registerNarrowLookup(Class<T> aspectClass, ItemStackAspectLookup<T> callback, ItemLike... items) {
         ((ItemApiLookup<T, Direction>) itemLookupMap.get(aspectClass)).registerForItems((stack, $) -> stack == null || stack.isEmpty() ? null : callback.find(stack), items);
     }
 

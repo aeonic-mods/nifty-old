@@ -1,14 +1,10 @@
-package design.aeonic.nifty.api.aspect.internal.item;
+package design.aeonic.nifty.api.aspect.internal;
 
-import design.aeonic.nifty.api.aspect.internal.item.slot.AbstractSlot;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
 import java.util.function.BiPredicate;
-import java.util.function.Predicate;
 
 /**
  * An aspect that allows providers to contain items which can be inserted and extracted in a specified manner.<br><br>
@@ -30,20 +26,18 @@ public interface ItemHandler {
     ItemStack insert(ItemStack stack, boolean simulate);
 
     /**
-     * Attempts to insert an item stack, delegating to the specified slot. Returns the remainder of the inserted stack.
+     * Attempts to insert an item stac. Returns the remainder of the inserted stack.
      *
      * @param slot  the slot index to insert to
      * @param stack the stack to insert
      * @param simulate if true, doesn't make any changes to stored contents
      * @return what's left of the inserted item stack - if nothing is inserted, will equal the passed stack
      * @throws IndexOutOfBoundsException if the slot index is invalid.
-     * @see AbstractSlot#insert(ItemStack)
      */
     ItemStack insert(int slot, ItemStack stack, boolean simulate);
 
     /**
-     * Attempts to extract the given amount from any slot of the given resource. In most cases, {@link #insert(ItemStack, boolean)}
-     * should be used instead for better performance on Forgen't.<br><br>
+     * Attempts to extract the given amount from any slot of the given resource.
      * @param itemPredicate a predicate that must be met for a stack to be extracted
      * @param amount the amount to extract
      * @param simulate if true, doesn't make any changes to stored contents
@@ -60,12 +54,11 @@ public interface ItemHandler {
      * @param simulate if true, doesn't make any changes to stored contents
      * @return the extracted stack; an empty stack if extraction failed or the slot is empty
      * @throws IndexOutOfBoundsException if the slot index is invalid.
-     * @see AbstractSlot#extract(int)
      */
     ItemStack extract(int slot, int amount, boolean simulate);
 
     /**
-     * Returns... the number of slots. Thank me later.
+     * Returns the number of slots.
      */
     int getNumSlots();
 

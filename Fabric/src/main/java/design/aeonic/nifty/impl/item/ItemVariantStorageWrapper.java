@@ -1,7 +1,7 @@
-package design.aeonic.nifty.impl.aspect.internal.item;
+package design.aeonic.nifty.impl.item;
 
 import com.google.common.collect.Iterators;
-import design.aeonic.nifty.api.aspect.internal.item.ItemHandler;
+import design.aeonic.nifty.api.aspect.internal.ItemHandler;
 import design.aeonic.nifty.api.util.Constants;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;

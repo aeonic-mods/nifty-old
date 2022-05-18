@@ -1,6 +1,6 @@
-package design.aeonic.nifty.api.aspect.internal.item.slot;
+package design.aeonic.nifty.api.item;
 
-import design.aeonic.nifty.api.aspect.internal.item.ItemHandler;
+import design.aeonic.nifty.api.aspect.internal.ItemHandler;
 import net.minecraft.world.item.ItemStack;
 
 /**

@@ -1,8 +1,5 @@
 package design.aeonic.nifty.api.core;
 
-import design.aeonic.nifty.api.aspect.internal.item.ItemHandler;
-import design.aeonic.nifty.api.aspect.internal.item.slot.AbstractSlot;
-import design.aeonic.nifty.api.aspect.internal.item.slot.SimpleSlot;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;

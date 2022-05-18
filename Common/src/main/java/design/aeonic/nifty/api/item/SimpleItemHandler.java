@@ -1,6 +1,6 @@
-package design.aeonic.nifty.api.aspect.internal.item;
+package design.aeonic.nifty.api.item;
 
-import design.aeonic.nifty.api.aspect.internal.item.slot.AbstractSlot;
+import design.aeonic.nifty.api.aspect.internal.ItemHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -12,7 +12,6 @@ import java.util.function.BiPredicate;
 /**
  * An item handler implementation that simplifies creating and defining the behavior of item handler objects.
  * This is done by deferring the actual behavior to contained {@link AbstractSlot} objects.
- * @see design.aeonic.nifty.api.aspect.internal.item.slot
  */
 public class SimpleItemHandler implements ItemHandler {
 
