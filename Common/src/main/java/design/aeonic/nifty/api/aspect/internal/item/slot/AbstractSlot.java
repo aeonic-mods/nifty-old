@@ -1,6 +1,5 @@
 package design.aeonic.nifty.api.aspect.internal.item.slot;
 
-import design.aeonic.nifty.api.aspect.AspectProvider;
 import design.aeonic.nifty.api.aspect.internal.item.ItemHandler;
 import net.minecraft.world.item.ItemStack;
 
@@ -114,16 +113,14 @@ public abstract class AbstractSlot {
     }
 
     /**
-     * Attempts to extract the given amount, modifying the slot's stored item immediately and returning the extracted stack. Ignores direction checks.<br><br>
-     * Extracts at most the smaller of {@code amount} and the contained item's max stack size.<br><br>
+     * Attempts to extract the given amount, modifying the slot's stored item immediately and returning the extracted stack.<br><br>
      *
      * @param amount the amount to extract
      * @return the extracted stack; an empty stack if extraction failed or the slot is empty
      */
     public ItemStack extract(int amount) {
-        int amt = Math.min(amount, containedStack.getMaxStackSize());
-        if (amt > 0) onChanged();
-        return containedStack.split(amt);
+        if (amount > 0) onChanged();
+        return containedStack.split(amount);
     }
 
     /**
