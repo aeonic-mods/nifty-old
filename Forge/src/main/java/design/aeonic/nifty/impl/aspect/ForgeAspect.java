@@ -1,7 +1,6 @@
 package design.aeonic.nifty.impl.aspect;
 
 import design.aeonic.nifty.api.aspect.Aspect;
-import design.aeonic.nifty.api.aspect.AspectProvider;
 import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.Optional;
@@ -19,7 +18,7 @@ public class ForgeAspect<T> implements Aspect<T> {
     }
 
     @Override
-    public Optional<T> get() {
+    public Optional<T> resolve() {
         return cached.resolve();
     }
 
@@ -30,21 +29,21 @@ public class ForgeAspect<T> implements Aspect<T> {
             cached.addListener($ -> refresh());
     }
 
-    public static class Wrapping<A, B> implements Aspect<B> {
+    public static class Wrapping<C, A> implements Aspect<A> {
 
-        private final Supplier<LazyOptional<A>> supplier;
-        private final Function<A, B> wrappingFunc;
-        private LazyOptional<A> cached;
+        private final Supplier<LazyOptional<? extends C>> supplier;
+        private final Function<C, A> wrappingFunc;
+        private LazyOptional<? extends C> cached;
 
-        public Wrapping(Supplier<LazyOptional<A>> supplier, Function<A, B> wrappingFunc) {
+        public Wrapping(Supplier<LazyOptional<? extends C>> supplier, Function<C, A> wrappingFunc) {
             this.supplier = supplier;
             this.wrappingFunc = wrappingFunc;
             refresh();
         }
 
         @Override
-        public Optional<B> get() {
-            Optional<A> res = cached.resolve();
+        public Optional<A> resolve() {
+            Optional<? extends C> res = cached.resolve();
             return res.map(wrappingFunc);
         }
 

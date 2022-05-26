@@ -7,7 +7,7 @@ import com.google.common.collect.Multimap;
 import design.aeonic.nifty.api.aspect.Aspect;
 import design.aeonic.nifty.api.aspect.AspectProvider;
 import design.aeonic.nifty.api.aspect.Aspects;
-import design.aeonic.nifty.mixin.access.CapabilityManagerAccess;
+import design.aeonic.nifty.impl.mixin.access.CapabilityManagerAccess;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -57,26 +57,6 @@ public class ForgeAspects implements Aspects {
 
     @Override
     public <T> void registerAspect(ResourceLocation id, Class<T> aspectClass) {
-        // Get the capability token for the given type
-        // If it is already registered, this is a preexisting capability - add it to a specific existing caps map
-        // If it is not yet registered, it's an internal Aspect - add it to the Aspect lookup map that getCapability
-        // will call
-
-        // Anything in the existing cap map will not be called from getCapability
-        // Anything in the internal aspect map will be called from getCapability
-
-        // Problem: aspect with a different base class -> existing capability
-        // ^ we can just use a separate register method that takes the capability
-        // Only problem I foresee now is in casting the returned capability from a map
-
-        // Wait never mind no, we can just add callbacks that wrap the iitemhandlers correctly etc
-        // Just use a callback that wraps the capability in a given interface
-
-
-        // Ignore most above
-        // We just need to put a callback in the lookup maps
-        // If we're registering a new capability, then there's no lookup until it's added later - never mind, also need a fallback
-        // If we're registering for an existing capability, we also register a lookup that calls #getCapability
         queue.add(aspectClass);
     }
 
@@ -85,11 +65,23 @@ public class ForgeAspects implements Aspects {
      * a preexisting capability via the given wrapping function. Also wraps getCapability calls with the second wrapping
      * function.
      */
-    public <A, C> void registerWrappedCapability(Class<A> aspectClass, Capability<C> capability, Function<C, A> wrapForExternal, Function<A, C> wrapForInternal) {
+    public <A, C> void registerWrappedCapability(Class<A> aspectClass, Capability<C> capability, Function<C, A> capToAspectWrapper, Function<A, C> aspectToCapWrapper) {
         aspectCaps.put(aspectClass, capability);
-        aspectToCapWrappers.put(capability, wrapForInternal);
+        aspectToCapWrappers.put(capability, aspectToCapWrapper);
         capToAspectLookups.put(aspectClass, (provider, direction) ->
-                new ForgeAspect.Wrapping<>(() -> provider.getCapability(capability, direction), wrapForExternal));
+                new ForgeAspect.Wrapping<>(() -> provider.getCapability(capability, direction), capToAspectWrapper));
+    }
+
+    /**
+     * Used like {@link #registerWrappedCapability(Class, Capability, Function, Function)} for interfaces that might
+     * have multiple caps, such as fluid handlers which have a separate itemstack capability.
+     */
+    public <A, C> void registerWrappedCapability(Class<A> aspectClass, Capability<C> capability, Function<C, A> capToAspectWrapper,
+                                                 Function<A, C> aspectToCapWrapper, Function<CapabilityProvider<?>, Capability<? extends C>> whichCap) {
+        aspectCaps.put(aspectClass, capability);
+        aspectToCapWrappers.put(capability, aspectToCapWrapper);
+        capToAspectLookups.put(aspectClass, (provider, direction) ->
+                new ForgeAspect.Wrapping<>(() -> provider.getCapability(whichCap.apply(provider), direction), capToAspectWrapper));
     }
 
     public void processAspectCaps(RegisterCapabilitiesEvent event) {

@@ -67,7 +67,7 @@ public interface Aspect<T> {
     /**
      * Gets the actual object this Aspect wraps
      */
-    Optional<T> get();
+    Optional<T> resolve();
 
     /**
      * Called when the Aspect is invalidated; refreshes the contained Optional from wherever it was acquired.<br><br>
@@ -79,7 +79,7 @@ public interface Aspect<T> {
      * Checks whether the contained object exists.
      */
     default boolean isPresent() {
-        return get().isPresent();
+        return resolve().isPresent();
     }
 
     /**
@@ -97,8 +97,8 @@ public interface Aspect<T> {
      */
     default @Nullable
     <R> R ifPresent(BiFunction<Aspect<T>, T, R> function) {
-        if (get().isPresent())
-            return function.apply(this, get().get());
+        if (resolve().isPresent())
+            return function.apply(this, resolve().get());
         return null;
     }
 
@@ -117,7 +117,7 @@ public interface Aspect<T> {
         }
 
         @Override
-        public Optional<T> get() {
+        public Optional<T> resolve() {
             return Optional.ofNullable(cached);
         }
 
@@ -134,7 +134,7 @@ public interface Aspect<T> {
         }
 
         @Override
-        public Optional<T> get() {
+        public Optional<T> resolve() {
             return Optional.empty();
         }
 

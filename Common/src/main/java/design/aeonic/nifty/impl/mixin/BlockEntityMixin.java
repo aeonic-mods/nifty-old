@@ -1,4 +1,4 @@
-package design.aeonic.nifty.mixin;
+package design.aeonic.nifty.impl.mixin;
 
 import design.aeonic.nifty.api.aspect.AspectProvider;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -25,7 +25,7 @@ public class BlockEntityMixin implements AspectProvider<BlockEntity> {
         refreshCallbacks.forEach(Runnable::run);
     }
 
-    @Inject(method="setRemoved()V", at=@At("HEAD"))
+    @Inject(method = "setRemoved()V", at = @At("HEAD"))
     void injectSetRemoved(CallbackInfo ci) {
         refreshAspects();
     }

@@ -1,4 +1,4 @@
-package design.aeonic.nifty.api.aspect.internal;
+package design.aeonic.nifty.api.item;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -28,8 +28,8 @@ public interface ItemHandler {
     /**
      * Attempts to insert an item stac. Returns the remainder of the inserted stack.
      *
-     * @param slot  the slot index to insert to
-     * @param stack the stack to insert
+     * @param slot     the slot index to insert to
+     * @param stack    the stack to insert
      * @param simulate if true, doesn't make any changes to stored contents
      * @return what's left of the inserted item stack - if nothing is inserted, will equal the passed stack
      * @throws IndexOutOfBoundsException if the slot index is invalid.
@@ -38,9 +38,10 @@ public interface ItemHandler {
 
     /**
      * Attempts to extract the given amount from any slot of the given resource.
+     *
      * @param itemPredicate a predicate that must be met for a stack to be extracted
-     * @param amount the amount to extract
-     * @param simulate if true, doesn't make any changes to stored contents
+     * @param amount        the amount to extract
+     * @param simulate      if true, doesn't make any changes to stored contents
      * @return the extracted item stack
      */
     ItemStack extract(BiPredicate<ItemLike, CompoundTag> itemPredicate, int amount, boolean simulate);
@@ -49,8 +50,8 @@ public interface ItemHandler {
      * Attempts to extract the given amount from the given slot, returning the extracted stack.In most cases,
      * {@link #extract(BiPredicate, int, boolean)} should be used instead for better performance on Forgen't.<br><br>
      *
-     * @param slot the slot index to extract from
-     * @param amount  the amount to extract
+     * @param slot     the slot index to extract from
+     * @param amount   the amount to extract
      * @param simulate if true, doesn't make any changes to stored contents
      * @return the extracted stack; an empty stack if extraction failed or the slot is empty
      * @throws IndexOutOfBoundsException if the slot index is invalid.
@@ -83,10 +84,9 @@ public interface ItemHandler {
     void set(int slot, ItemStack stack);
 
     /**
-     * Writes this item handler's slot contents to a given compound tag.<br><br>
-     * Assumes a tag without existing data.
+     * Writes this item handler's slot contents to a compound tag.
      */
-    CompoundTag serialize(CompoundTag tag);
+    CompoundTag serialize();
 
     /**
      * Reads and reconstructs this item handler's slot contents from a given compound tag.

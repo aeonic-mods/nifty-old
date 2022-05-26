@@ -1,6 +1,5 @@
 package design.aeonic.nifty.api.item;
 
-import design.aeonic.nifty.api.aspect.internal.ItemHandler;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -63,7 +62,7 @@ public abstract class AbstractSlot {
     }
 
     /**
-     * Simulates extraction
+     * Simulates extraction.
      */
     public ItemStack simulateExtract(int amount) {
         ItemStack temp = containedStack;
@@ -74,7 +73,7 @@ public abstract class AbstractSlot {
     }
 
     /**
-     * Inserts an item stack to the slot if allowed; returns the remainder of the inserted stack. Ignores direction checks.<br><br>
+     * Inserts an item stack to the slot if allowed; returns the remainder of the inserted stack..<br><br>
      *
      * @param stack the item stack to insert
      * @return what's left of the inserted item stack - if nothing is inserted, will equal the passed stack
@@ -96,7 +95,9 @@ public abstract class AbstractSlot {
         ItemStack old = stack.copy();
         if (!containedStack.isEmpty()) {
             // Item can't be stacked with contained
-            if (!stack.is(containedStack.getItem())) return stack;
+            if (!(stack.sameItem(containedStack) &&
+                    ((!stack.hasTag() && !containedStack.hasTag()) ||
+                            stack.getOrCreateTag().equals(containedStack.getTag())))) return stack;
 
             int toInsert = maxStackSize(stack) - containedStack.getCount();
             // Something fishy

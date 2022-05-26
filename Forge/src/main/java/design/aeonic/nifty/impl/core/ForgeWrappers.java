@@ -1,12 +1,21 @@
 package design.aeonic.nifty.impl.core;
 
-import design.aeonic.nifty.api.aspect.internal.ItemHandler;
+import design.aeonic.nifty.api.item.FluidHandler;
+import design.aeonic.nifty.api.item.ItemHandler;
 import design.aeonic.nifty.api.core.Wrappers;
+import design.aeonic.nifty.impl.fluid.ForgeFluidHandler;
 import design.aeonic.nifty.impl.item.ForgeItemHandler;
 
 public class ForgeWrappers implements Wrappers {
+
     @Override
     public ItemHandler itemHandler(ItemHandler parent) {
         return new ForgeItemHandler(parent);
     }
+
+    @Override
+    public FluidHandler fluidHandler(FluidHandler parent) {
+        return new ForgeFluidHandler(parent);
+    }
+
 }

@@ -1,4 +1,4 @@
-package design.aeonic.nifty.mixin.access;
+package design.aeonic.nifty.impl.mixin.access;
 
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;

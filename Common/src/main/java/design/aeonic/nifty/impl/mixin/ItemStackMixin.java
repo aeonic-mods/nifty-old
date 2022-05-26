@@ -1,4 +1,4 @@
-package design.aeonic.nifty.mixin;
+package design.aeonic.nifty.impl.mixin;
 
 import design.aeonic.nifty.api.aspect.AspectProvider;
 import net.minecraft.world.item.ItemStack;
@@ -26,18 +26,19 @@ public abstract class ItemStackMixin implements AspectProvider<ItemStack> {
         refreshCallbacks.forEach(Runnable::run);
     }
 
-    @Inject(method="setCount", at=@At("TAIL"))
+    @Inject(method = "setCount", at = @At("TAIL"))
     void injectSetCount(int count, CallbackInfo ci) {
         if (count != this.count) {
             refreshAspects();
         }
     }
 
-    @Inject(method="onDestroyed", at=@At("TAIL"))
+    @Inject(method = "onDestroyed", at = @At("TAIL"))
     void injectOnDestroyed(CallbackInfo ci) {
         refreshAspects();
     }
 
-    @Shadow private int count;
+    @Shadow
+    private int count;
 
 }

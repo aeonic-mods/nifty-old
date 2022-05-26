@@ -1,6 +1,7 @@
 package design.aeonic.nifty.api.core;
 
-import design.aeonic.nifty.api.aspect.internal.ItemHandler;
+import design.aeonic.nifty.api.item.FluidHandler;
+import design.aeonic.nifty.api.item.ItemHandler;
 
 public interface Wrappers {
 
@@ -11,5 +12,13 @@ public interface Wrappers {
      * @return the new item handler
      */
     ItemHandler itemHandler(ItemHandler parent);
+
+    /**
+     * Wraps an existing fluid handler, allowing for it to be utilized in existing platform-specific transfer systems.<br><br>
+     *
+     * @param parent an existing fluid handler to wrap
+     * @return the new fluid handler
+     */
+    FluidHandler fluidHandler(FluidHandler parent);
 
 }

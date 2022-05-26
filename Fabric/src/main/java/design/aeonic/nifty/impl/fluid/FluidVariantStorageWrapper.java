@@ -1,56 +1,56 @@
-package design.aeonic.nifty.impl.item;
+package design.aeonic.nifty.impl.fluid;
 
 import com.google.common.collect.Iterators;
+import design.aeonic.nifty.api.fluid.FluidStack;
 import design.aeonic.nifty.api.item.FluidHandler;
-import design.aeonic.nifty.api.item.ItemHandler;
 import design.aeonic.nifty.api.util.Constants;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.material.Fluid;
 
 import java.util.function.BiPredicate;
 
 /**
- * An item handler implementation that defers to an existing Fabric item storage.
- * Essentially the inverse of {@link FabricItemHandler}.
+ * A fluid handler implementation that defers to an existing Fabric fluid storage.
+ * Essentially the inverse of {@link FabricFluidHandler}.
  */
-public record ItemVariantStorageWrapper(Storage<ItemVariant> storage) implements ItemHandler {
+public record FluidVariantStorageWrapper(Storage<FluidVariant> storage) implements FluidHandler {
 
     @Override
-    public boolean allowedInSlot(int slot, ItemStack stack) {
-        // When actual insertion is tried the backing Storage should just treat the input correctly if it's
-        // not allowed. Not much we could do here, besides iterate and check the itemvariant in each "slot"
+    public boolean allowedInSlot(int slot, FluidStack stack) {
+        // See ItemVariantStorageWrapper#allowedInSlot
         return true;
     }
 
     @Override
-    public ItemStack insert(int slot, ItemStack stack, boolean simulate) {
+    public FluidStack insert(int slot, FluidStack stack, boolean simulate) {
         return insert(stack, simulate);
     }
 
     @Override
-    public ItemStack insert(ItemStack stack, boolean simulate) {
+    public FluidStack insert(FluidStack stack, boolean simulate) {
         if (stack.isEmpty()) return stack;
         Transaction transaction = Transaction.openNested(Transaction.getCurrentUnsafe());
-        int inserted = (int) storage.insert(ItemVariant.of(stack), stack.getCount(), transaction);
+        int inserted = (int) storage.insert(asFluidVariant(stack), stack.getAmount(), transaction);
         if (simulate) transaction.abort();
         else transaction.commit();
         return stack.split(inserted);
     }
 
     @Override
-    public ItemStack extract(BiPredicate<ItemLike, CompoundTag> itemPredicate, int amount, boolean simulate) {
+    public FluidStack extract(BiPredicate<Fluid, CompoundTag> fluidPredicate, int amount, boolean simulate) {
         Transaction transaction = Transaction.openNested(Transaction.getCurrentUnsafe());
-        ItemStack ret = ItemStack.EMPTY;
+        FluidStack ret = FluidStack.EMPTY_STACK;
         for (var iter = storage.iterator(transaction); iter.hasNext();) {
             var view = iter.next();
             if (view.isResourceBlank()) continue;
-            ItemVariant resource = view.getResource();
-            if (itemPredicate.test(resource.getItem(), resource.getNbt())) {
-                ret = resource.toStack((int) view.extract(resource, amount, transaction));
+            FluidVariant resource = view.getResource();
+            if (fluidPredicate.test(resource.getFluid(), resource.getNbt())) {
+                ret = FabricFluidHandler.asFluidStack(resource, view.extract(resource, amount, transaction));
                 break;
             }
         }
@@ -60,16 +60,15 @@ public record ItemVariantStorageWrapper(Storage<ItemVariant> storage) implements
     }
 
     @Override
-    public ItemStack extract(int slot, int amount, boolean simulate) {
+    public FluidStack extract(int slot, int amount, boolean simulate) {
         Transaction transaction = Transaction.openNested(Transaction.getCurrentUnsafe());
-        ItemStack ret = ItemStack.EMPTY;
+        FluidStack ret = FluidStack.EMPTY_STACK;
         int i = 0;
         for (var iter = storage.iterator(transaction); iter.hasNext(); i++) {
             var view = iter.next();
             if (i == slot && !view.isResourceBlank()) {
-                ItemVariant item = view.getResource();
-                ret = item.toStack((int) view.extract(item, amount, transaction));
-                break;
+                FluidVariant resource = view.getResource();
+                ret = FabricFluidHandler.asFluidStack(resource, (int) view.extract(resource, amount, transaction));
             }
         }
         if (simulate) transaction.abort(); else transaction.commit();
@@ -85,14 +84,14 @@ public record ItemVariantStorageWrapper(Storage<ItemVariant> storage) implements
     }
 
     @Override
-    public ItemStack get(int index) {
+    public FluidStack get(int slot) {
         Transaction transaction = Transaction.openNested(Transaction.getCurrentUnsafe());
-        ItemStack ret = ItemStack.EMPTY;
+        FluidStack ret = FluidStack.EMPTY_STACK;
         int i = 0;
         for (var iter = storage.iterator(transaction); iter.hasNext(); i++) {
             var view = iter.next();
-            if (i == index ) {
-                ret = view.getResource().toStack();
+            if (i == slot) {
+                ret = FabricFluidHandler.asFluidStack(view.getResource(), view.getAmount());
             }
         }
         transaction.commit();
@@ -100,9 +99,14 @@ public record ItemVariantStorageWrapper(Storage<ItemVariant> storage) implements
     }
 
     @Override
+    public void set(int slot, FluidStack stack) {
+        Constants.LOGGER.error("#set() was called on a wrapping FluidHandler!");
+    }
+
+    @Override
     public int getCapacity(int slot) {
         Transaction transaction = Transaction.openNested(Transaction.getCurrentUnsafe());
-        int ret = ItemHandler.super.getCapacity(slot);
+        int ret = FluidHandler.super.getCapacity(slot);
         int i = 0;
         for (var iter = storage.iterator(transaction); iter.hasNext(); i++) {
             var view = iter.next();
@@ -115,16 +119,15 @@ public record ItemVariantStorageWrapper(Storage<ItemVariant> storage) implements
     }
 
     @Override
-    public void set(int slot, ItemStack stack) {
-        Constants.LOGGER.error("#set() was called on a wrapping ItemHandler!");
-    }
-
-    @Override
     public CompoundTag serialize() {
         return null;
     }
 
     @Override
     public void deserialize(CompoundTag tag) {}
+
+    public static FluidVariant asFluidVariant(FluidStack stack) {
+        return FluidVariant.of(stack.getFluid(), stack.getTag());
+    }
 
 }

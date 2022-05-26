@@ -1,6 +1,6 @@
 package design.aeonic.nifty.impl.item;
 
-import design.aeonic.nifty.api.aspect.internal.ItemHandler;
+import design.aeonic.nifty.api.item.ItemHandler;
 import design.aeonic.nifty.api.util.Constants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -78,7 +78,7 @@ public class IItemHandlerWrapper implements ItemHandler {
     }
 
     @Override
-    public CompoundTag serialize(CompoundTag tag) {
+    public CompoundTag serialize() {
         return null;
     }
 

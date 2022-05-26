@@ -1,6 +1,5 @@
 package design.aeonic.nifty.api.item;
 
-import design.aeonic.nifty.api.aspect.internal.ItemHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -19,6 +18,10 @@ public class SimpleItemHandler implements ItemHandler {
 
     public SimpleItemHandler(AbstractSlot... slots) {
         this.slots = slots;
+    }
+
+    public AbstractSlot getSlot(int index) {
+        return slots[index];
     }
 
     @Override
@@ -75,10 +78,6 @@ public class SimpleItemHandler implements ItemHandler {
         getSlot(slot).set(stack);
     }
 
-    public AbstractSlot getSlot(int index) {
-        return slots[index];
-    }
-
     @Override
     public int getNumSlots() {
         return slots.length;
@@ -89,7 +88,9 @@ public class SimpleItemHandler implements ItemHandler {
         return ItemHandler.super.getCapacity(slot);
     }
 
-    public CompoundTag serialize(CompoundTag tag) {
+    @Override
+    public CompoundTag serialize() {
+        CompoundTag tag = new CompoundTag();
         ListTag list = tag.getList("Slots", Tag.TAG_COMPOUND);
 
         for (int i = 0; i < slots.length; i++) {
@@ -101,6 +102,7 @@ public class SimpleItemHandler implements ItemHandler {
         return tag;
     }
 
+    @Override
     public void deserialize(CompoundTag tag) {
         ListTag list = tag.getList("Slots", Tag.TAG_COMPOUND);
 

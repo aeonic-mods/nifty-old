@@ -1,4 +1,4 @@
-package design.aeonic.nifty.mixin;
+package design.aeonic.nifty.impl.mixin;
 
 import design.aeonic.nifty.ForgeNifty;
 import net.minecraft.core.Direction;
