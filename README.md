@@ -54,10 +54,6 @@ Nifty is a cross-platform library mod that serves as a basis for tech mods targe
     * Avoid the extra dependency on Forge
     * Depend on Cloth or similar on Fabric
     * Simplified implementation as compared to Forge's configs
-* Wrench configuration system
-    * Blocks define behaviors for wrench configuration
-    * If desired, restrict those behaviors to only work on a specific wrench
-        * Probably just use a predicate for more control
 * Abstracted networking
 * Abstracted tags deferring to platform tags
 * Abstracted data loading and data-driven "things"

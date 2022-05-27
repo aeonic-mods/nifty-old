@@ -4,8 +4,6 @@ import design.aeonic.nifty.api.registry.GameObject;
 import design.aeonic.nifty.api.registry.Registrar;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.RegistryManager;
 
 import java.util.HashMap;
 import java.util.Map;
