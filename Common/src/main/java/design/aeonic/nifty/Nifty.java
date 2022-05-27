@@ -4,6 +4,7 @@ import design.aeonic.nifty.api.aspect.Aspects;
 import design.aeonic.nifty.api.core.Factories;
 import design.aeonic.nifty.api.core.PlatformInfo;
 import design.aeonic.nifty.api.core.Wrappers;
+import design.aeonic.nifty.api.energy.EnergyHandler;
 import design.aeonic.nifty.api.item.FluidHandler;
 import design.aeonic.nifty.api.item.ItemHandler;
 import design.aeonic.nifty.api.registry.Registrar;
@@ -38,8 +39,9 @@ public class Nifty {
 
     public static void init() {
         // Default Aspects
-        ASPECTS.registerAspect(new ResourceLocation(Constants.NIFTY_ID, "item_handler"), ItemHandler.class);
-        ASPECTS.registerAspect(new ResourceLocation(Constants.NIFTY_ID, "fluid_handler"), FluidHandler.class);
+        ASPECTS.registerAspect(new ResourceLocation(Constants.NIFTY_ID, "item"), ItemHandler.class);
+        ASPECTS.registerAspect(new ResourceLocation(Constants.NIFTY_ID, "fluid"), FluidHandler.class);
+        ASPECTS.registerAspect(new ResourceLocation(Constants.NIFTY_ID, "energy"), EnergyHandler.class);
     }
 
     public static void clientInit() {
