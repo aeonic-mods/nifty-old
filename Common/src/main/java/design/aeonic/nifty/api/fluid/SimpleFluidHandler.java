@@ -4,6 +4,7 @@ import design.aeonic.nifty.api.item.FluidHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.material.Fluid;
 
 import java.util.function.BiPredicate;
@@ -101,6 +102,20 @@ public class SimpleFluidHandler implements FluidHandler {
 
         for (int i = 0; i < slots.length; i++) {
             slots[i].set(FluidStack.fromNbt(list.getCompound(i)));
+        }
+    }
+
+    @Override
+    public void toNetwork(FriendlyByteBuf buf) {
+        for (AbstractFluidSlot slot: slots) {
+            slot.get().toNetwork(buf);
+        }
+    }
+
+    @Override
+    public void fromNetwork(FriendlyByteBuf buf) {
+        for (AbstractFluidSlot slot: slots) {
+            slot.set(FluidStack.fromNetwork(buf));
         }
     }
 

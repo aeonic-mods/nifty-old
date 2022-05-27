@@ -2,6 +2,7 @@ package design.aeonic.nifty.api.fluid;
 
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
@@ -59,6 +60,25 @@ public class FluidStack {
                 Registry.FLUID.get(new ResourceLocation(tag.getString("Fluid"))),
                 tag.getInt("Amount"),
                 tag.getCompound("Data"));
+    }
+
+    public void toNetwork(FriendlyByteBuf buf) {
+        if (isEmpty()) {
+            buf.writeBoolean(false);
+            return;
+        }
+        buf.writeBoolean(true);
+        buf.writeVarInt(Registry.FLUID.getId(fluid));
+        buf.writeVarInt(amount);
+        buf.writeNbt(tag);
+    }
+
+    public static FluidStack fromNetwork(FriendlyByteBuf buf) {
+        if (buf.readBoolean()) {
+            return of(Registry.FLUID.byId(buf.readVarInt()),
+                    buf.readVarInt(), buf.readNbt());
+        }
+        return EMPTY_STACK;
     }
 
     public boolean is(Fluid fluid) {

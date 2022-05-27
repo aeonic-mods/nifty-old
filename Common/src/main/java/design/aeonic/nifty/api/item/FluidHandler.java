@@ -2,6 +2,7 @@ package design.aeonic.nifty.api.item;
 
 import design.aeonic.nifty.api.fluid.FluidStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.material.Fluid;
 
 import java.util.function.BiPredicate;
@@ -90,5 +91,15 @@ public interface FluidHandler {
      * Reads and reconstructs this fluid handler's slot contents from a given compound tag.
      */
     void deserialize(CompoundTag tag);
+
+    /**
+     * Writes this fluid handler's slot contents to a network packet.
+     */
+    void toNetwork(FriendlyByteBuf buf);
+
+    /**
+     * Reads and reconstructs this fluid handler's slot contents from a network packet.
+     */
+    void fromNetwork(FriendlyByteBuf buf);
 
 }

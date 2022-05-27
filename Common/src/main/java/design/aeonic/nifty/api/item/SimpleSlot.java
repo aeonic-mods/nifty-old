@@ -7,11 +7,11 @@ import java.util.function.Predicate;
 
 public class SimpleSlot extends AbstractSlot {
 
-    protected Runnable onChanged;
-    protected Predicate<ItemStack> allowedPredicate;
-    protected Function<ItemStack, Integer> maxStack;
-    protected int x;
-    protected int y;
+    protected final Runnable onChanged;
+    protected final Predicate<ItemStack> allowedPredicate;
+    protected final Function<ItemStack, Integer> maxStack;
+    protected final int x;
+    protected final int y;
 
     /**
      * @param onChanged a runnable to run when this slot's contents have changed

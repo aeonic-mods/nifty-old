@@ -3,6 +3,7 @@ package design.aeonic.nifty.api.item;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
@@ -108,6 +109,20 @@ public class SimpleItemHandler implements ItemHandler {
 
         for (int i = 0; i < slots.length; i++) {
             slots[i].set(ItemStack.of(list.getCompound(i)));
+        }
+    }
+
+    @Override
+    public void toNetwork(FriendlyByteBuf buf) {
+        for (AbstractSlot slot: slots) {
+            buf.writeItem(slot.get());
+        }
+    }
+
+    @Override
+    public void fromNetwork(FriendlyByteBuf buf) {
+        for (AbstractSlot slot: slots) {
+            slot.set(buf.readItem());
         }
     }
 

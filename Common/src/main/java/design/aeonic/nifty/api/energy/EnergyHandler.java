@@ -2,6 +2,7 @@ package design.aeonic.nifty.api.energy;
 
 import design.aeonic.nifty.api.item.ItemHandler;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 
 /**
  * An aspect that allows providers to contain and transfer energy.<br><br>
@@ -60,5 +61,15 @@ public interface EnergyHandler {
      * Reads and reconstructs this energy handler's storage from NBT.
      */
     void deserialize(CompoundTag tag);
+
+    /**
+     * Writes this energy handler to a network packet.
+     */
+    void toNetwork(FriendlyByteBuf buf);
+
+    /**
+     * Reads and reconstructs this energy handler from a network packet.
+     */
+    void fromNetwork(FriendlyByteBuf buf);
 
 }

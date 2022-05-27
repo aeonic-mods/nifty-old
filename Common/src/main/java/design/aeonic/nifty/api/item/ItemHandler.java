@@ -1,6 +1,7 @@
 package design.aeonic.nifty.api.item;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
@@ -92,5 +93,15 @@ public interface ItemHandler {
      * Reads and reconstructs this item handler's slot contents from a given compound tag.
      */
     void deserialize(CompoundTag tag);
+
+    /**
+     * Writes this item handler's slot contents to a network packet.
+     */
+    void toNetwork(FriendlyByteBuf buf);
+
+    /**
+     * Reads and reconstructs this item handler's slot contents from a network packet.
+     */
+    void fromNetwork(FriendlyByteBuf buf);
 
 }

@@ -1,6 +1,7 @@
 package design.aeonic.nifty.api.energy;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 
 /**
  * A simple energy handler implementation for easy usage with an initial capacity that can be later changed.
@@ -108,6 +109,18 @@ public class SimpleEnergyHandler implements EnergyHandler {
         long tempCapacity = tag.getLong("Capacity");
         if (tempCapacity != 0) capacity = tempCapacity;
         stored = tag.getLong("Stored");
+    }
+
+    @Override
+    public void toNetwork(FriendlyByteBuf buf) {
+        buf.writeLong(capacity);
+        buf.writeLong(stored);
+    }
+
+    @Override
+    public void fromNetwork(FriendlyByteBuf buf) {
+        capacity = buf.readLong();
+        stored = buf.readLong();
     }
 
 }
