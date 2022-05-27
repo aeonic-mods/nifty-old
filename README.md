@@ -30,17 +30,14 @@ Nifty is a cross-platform library mod that serves as a basis for tech mods targe
   * Some internal Aspects
     * Item handlers, with complete compatibility for existing Forge IItemHandlers and the Fabric transfer api
       * Includes a simplified implementation using Slot objects to describe an inventory's functionality
-    * Fluid handlers, same as above (under construction)
-    * Energy handlers, same as above + compat for Tech Reborn's energy api (under construction)
+    * Fluid handlers, same as above
+    * Energy handlers, same as above + compat for Reborn Team's Energy API on Fabric
 
 ### Planned
 
-* Aspect updates
-    * Abstracted power system, with easy implementation on blocks and items
-        * Compat with [Tech Reborn's energy API](https://github.com/TechReborn/Energy) on Fabric
-    * Interoperability with a simplified UI system, somewhat akin to Extra Utils' old machine interface mechanics
-        * Easy I/O definitions in the blockentity that can be referenced and displayed with ease from a screen
-        * Energy usage over time graph like Satisfactory's would be very cool
+* Aspect interoperability with a simplified UI system, somewhat akin to Extra Utils' old machine interface mechanics
+    * Easy I/O definitions in the blockentity that can be referenced and displayed with ease from a screen
+    * Energy usage over time graph like Satisfactory's would be very cool
 * Tentatively, multiblocks
 * Abstract processing implementations
     * Easily create recipes
