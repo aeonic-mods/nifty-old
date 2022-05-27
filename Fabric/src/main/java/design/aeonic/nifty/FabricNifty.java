@@ -10,12 +10,14 @@ import design.aeonic.nifty.impl.fluid.FabricFluidHandler;
 import design.aeonic.nifty.impl.fluid.FluidVariantStorageWrapper;
 import design.aeonic.nifty.impl.item.FabricItemHandler;
 import design.aeonic.nifty.impl.item.ItemVariantStorageWrapper;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
 import team.reborn.energy.api.EnergyStorage;
 import team.reborn.energy.api.EnergyStorageUtil;
 import team.reborn.energy.impl.EnergyImpl;
@@ -48,12 +50,22 @@ public class FabricNifty {
             if (storage == null) return null;
             return new FluidVariantStorageWrapper(storage);
         });
+        ASPECTS.registerExternalLookup(FluidHandler.class, (ItemStack stack) -> {
+            Storage<FluidVariant> storage = FluidStorage.ITEM.find(stack, ContainerItemContext.withInitial(stack));
+            if (storage == null) return null;
+            return new FluidVariantStorageWrapper(storage);
+        });
 
         // Expose blocks using Team Reborn's Energy API to Nifty's energy handler lookup
         ASPECTS.registerExternalLookup(EnergyHandler.class, (be, dir) -> {
             if (be == null || be.getLevel() == null) return null;
             EnergyStorage storage = EnergyStorage.SIDED.find(be.getLevel(), be.getBlockPos(),
                     dir == null ? Direction.UP : dir);
+            return new EnergyStorageWrapper(storage);
+        });
+        ASPECTS.registerExternalLookup(EnergyHandler.class, (ItemStack stack) -> {
+            EnergyStorage storage = EnergyStorage.ITEM.find(stack, ContainerItemContext.withInitial(stack));
+            if (storage == null) return null;
             return new EnergyStorageWrapper(storage);
         });
 
@@ -72,11 +84,21 @@ public class FabricNifty {
             if (sup != null) return (FabricFluidHandler) sup.get();
             return null;
         });
+        FluidStorage.ITEM.registerFallback((stack, ctx) -> {
+            Supplier<FluidHandler> sup = ASPECTS.queryInternal(FluidHandler.class, stack);
+            if (sup != null) return (FabricFluidHandler) sup.get();
+            return null;
+        });
 
         // Expose Nifty's energy handlers to Team Reborn's Energy API
         EnergyStorage.SIDED.registerFallback((level, pos, state, be, dir) -> {
             if (be == null) return null;
             Supplier<EnergyHandler> sup = ASPECTS.queryInternal(EnergyHandler.class, be, dir);
+            if (sup != null) return (RebornEnergyHandler) sup.get();
+            return null;
+        });
+        EnergyStorage.ITEM.registerFallback((stack, ctx) -> {
+            Supplier<EnergyHandler> sup = ASPECTS.queryInternal(EnergyHandler.class, stack);
             if (sup != null) return (RebornEnergyHandler) sup.get();
             return null;
         });
