@@ -25,7 +25,7 @@ public class EntityMixin implements AspectProvider<Entity> {
         refreshCallbacks.forEach(Runnable::run);
     }
 
-    @Inject(method = "setRemoved", at = @At("TAIL"))
+    @Inject(method = "setRemoved(Lnet/minecraft/world/entity/Entity$RemovalReason;)V", at = @At("TAIL"))
     void injectSetRemoved(CallbackInfo ci) {
         refreshAspects();
     }

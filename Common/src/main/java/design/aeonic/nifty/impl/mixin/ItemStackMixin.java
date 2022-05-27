@@ -26,14 +26,14 @@ public abstract class ItemStackMixin implements AspectProvider<ItemStack> {
         refreshCallbacks.forEach(Runnable::run);
     }
 
-    @Inject(method = "setCount", at = @At("TAIL"))
+    @Inject(method = "setCount(I)V", at = @At("TAIL"))
     void injectSetCount(int count, CallbackInfo ci) {
         if (count != this.count) {
             refreshAspects();
         }
     }
 
-    @Inject(method = "onDestroyed", at = @At("TAIL"))
+    @Inject(method = "onDestroyed(Lnet/minecraft/world/entity/item/ItemEntity;)V", at = @At("TAIL"))
     void injectOnDestroyed(CallbackInfo ci) {
         refreshAspects();
     }

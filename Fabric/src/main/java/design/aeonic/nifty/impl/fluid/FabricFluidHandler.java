@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.minecraft.nbt.CompoundTag;
 
 import java.util.Iterator;
 
@@ -30,10 +31,10 @@ public class FabricFluidHandler extends WrappingFluidHandler implements Storage<
     @Override
     public long extract(FluidVariant resource, long maxAmount, TransactionContext transaction) {
         transaction.addCloseCallback((t, r) -> {
-            if (r.wasCommitted()) extract((fluid, tag) -> resource.getFluid().isSame(fluid) && resource.getNbt().equals(tag),
+            if (r.wasCommitted()) extract((fluid, tag) -> resource.getFluid().isSame(fluid) && (!resource.hasNbt() || resource.getNbt().equals(tag)),
                     (int) Math.min(maxAmount, Integer.MAX_VALUE), false);
         });
-        return extract((fluid, tag) -> resource.getFluid().isSame(fluid) && resource.getNbt().equals(tag),
+        return extract((fluid, tag) -> resource.getFluid().isSame(fluid) && (!resource.hasNbt() || resource.getNbt().equals(tag)),
                 (int) Math.min(maxAmount, Integer.MAX_VALUE), true).getAmount();
     }
 
@@ -43,7 +44,7 @@ public class FabricFluidHandler extends WrappingFluidHandler implements Storage<
     }
 
     public static FluidStack asFluidStack(FluidVariant resource, long amt) {
-        return FluidStack.of(resource.getFluid(), (int) Math.min(amt, Integer.MAX_VALUE), resource.getNbt());
+        return FluidStack.of(resource.getFluid(), (int) Math.min(amt, Integer.MAX_VALUE), resource.hasNbt() ? resource.getNbt() : new CompoundTag());
     }
 
     class SlotView implements StorageView<FluidVariant> {

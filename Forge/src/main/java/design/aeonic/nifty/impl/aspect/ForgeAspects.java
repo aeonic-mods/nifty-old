@@ -29,9 +29,8 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-
 public class ForgeAspects implements Aspects {
-    // Somewhat messy implementation, may rewrite later
+    // TODO: Cleanup
 
     private final List<Class<?>> queue = new ArrayList<>();
 
@@ -68,20 +67,17 @@ public class ForgeAspects implements Aspects {
     public <A, C> void registerWrappedCapability(Class<A> aspectClass, Capability<C> capability, Function<C, A> capToAspectWrapper, Function<A, C> aspectToCapWrapper) {
         aspectCaps.put(aspectClass, capability);
         aspectToCapWrappers.put(capability, aspectToCapWrapper);
-        capToAspectLookups.put(aspectClass, (provider, direction) ->
-                new ForgeAspect.Wrapping<>(() -> provider.getCapability(capability, direction), capToAspectWrapper));
+        capToAspectLookups.put(aspectClass, (provider, direction) -> new ForgeAspect.Wrapping<>(() -> provider.getCapability(capability, direction), capToAspectWrapper));
     }
 
     /**
      * Used like {@link #registerWrappedCapability(Class, Capability, Function, Function)} for interfaces that might
      * have multiple caps, such as fluid handlers which have a separate itemstack capability.
      */
-    public <A, C> void registerWrappedCapability(Class<A> aspectClass, Capability<C> capability, Function<C, A> capToAspectWrapper,
-                                                 Function<A, C> aspectToCapWrapper, Function<CapabilityProvider<?>, Capability<? extends C>> whichCap) {
+    public <A, C> void registerWrappedCapability(Class<A> aspectClass, Capability<C> capability, Function<C, A> capToAspectWrapper, Function<A, C> aspectToCapWrapper, Function<CapabilityProvider<?>, Capability<? extends C>> whichCap) {
         aspectCaps.put(aspectClass, capability);
         aspectToCapWrappers.put(capability, aspectToCapWrapper);
-        capToAspectLookups.put(aspectClass, (provider, direction) ->
-                new ForgeAspect.Wrapping<>(() -> provider.getCapability(whichCap.apply(provider), direction), capToAspectWrapper));
+        capToAspectLookups.put(aspectClass, (provider, direction) -> new ForgeAspect.Wrapping<>(() -> provider.getCapability(whichCap.apply(provider), direction), capToAspectWrapper));
     }
 
     public void processAspectCaps(RegisterCapabilitiesEvent event) {
@@ -93,8 +89,7 @@ public class ForgeAspects implements Aspects {
         // If the Aspect was already registered with a wrapper etc don't overwrite anything
         if (aspectCaps.containsKey(aspectClass)) return;
 
-        Capability<T> cap = ((CapabilityManagerAccess) ((Object) CapabilityManager.INSTANCE))
-                .callGet(Type.getInternalName(aspectClass), false);
+        Capability<T> cap = ((CapabilityManagerAccess) ((Object) CapabilityManager.INSTANCE)).callGet(Type.getInternalName(aspectClass), false);
 
         if (cap.isRegistered())
             // Too much brain fog to figure out if I actually need this, but worst case it's just unnecessary
@@ -137,8 +132,7 @@ public class ForgeAspects implements Aspects {
                     return LazyOptional.of(() -> (C) supplier.get());
                 }
             }
-        }
-        else if (provider instanceof Entity entity) {
+        } else if (provider instanceof Entity entity) {
             Supplier<A> supplier = queryInternal(aspectClass, entity);
             if (supplier != null && supplier.get() != null) {
                 if (aspectToCapWrappers.containsKey(capability)) {
@@ -147,8 +141,7 @@ public class ForgeAspects implements Aspects {
                     return LazyOptional.of(() -> (C) supplier.get());
                 }
             }
-        }
-        else if (provider instanceof ItemStack stack) {
+        } else if (provider instanceof ItemStack stack) {
             Supplier<A> supplier = queryInternal(aspectClass, stack);
             if (supplier != null && supplier.get() != null) {
                 if (aspectToCapWrappers.containsKey(capability)) {
