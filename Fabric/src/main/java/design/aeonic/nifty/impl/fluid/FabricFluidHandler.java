@@ -3,13 +3,10 @@ package design.aeonic.nifty.impl.fluid;
 import design.aeonic.nifty.api.fluid.FluidStack;
 import design.aeonic.nifty.api.item.FluidHandler;
 import design.aeonic.nifty.impl.aspect.WrappingFluidHandler;
-import design.aeonic.nifty.impl.item.FabricItemHandler;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.Iterator;
 
@@ -34,10 +31,10 @@ public class FabricFluidHandler extends WrappingFluidHandler implements Storage<
     public long extract(FluidVariant resource, long maxAmount, TransactionContext transaction) {
         transaction.addCloseCallback((t, r) -> {
             if (r.wasCommitted()) extract((fluid, tag) -> resource.getFluid().isSame(fluid) && resource.getNbt().equals(tag),
-                    (int) maxAmount, false);
+                    (int) Math.min(maxAmount, Integer.MAX_VALUE), false);
         });
         return extract((fluid, tag) -> resource.getFluid().isSame(fluid) && resource.getNbt().equals(tag),
-                (int) maxAmount, true).getAmount();
+                (int) Math.min(maxAmount, Integer.MAX_VALUE), true).getAmount();
     }
 
     @Override
@@ -46,7 +43,7 @@ public class FabricFluidHandler extends WrappingFluidHandler implements Storage<
     }
 
     public static FluidStack asFluidStack(FluidVariant resource, long amt) {
-        return FluidStack.of(resource.getFluid(), (int) amt, resource.getNbt());
+        return FluidStack.of(resource.getFluid(), (int) Math.min(amt, Integer.MAX_VALUE), resource.getNbt());
     }
 
     class SlotView implements StorageView<FluidVariant> {
@@ -62,9 +59,9 @@ public class FabricFluidHandler extends WrappingFluidHandler implements Storage<
             FluidStack stored = get(index);
             if (maxAmount > 0 && resource.isOf(stored.getFluid()) && resource.nbtMatches(stored.getTag())) {
                 transaction.addCloseCallback((t, r) -> {
-                    if (r.wasCommitted()) FabricFluidHandler.this.extract(index, (int) maxAmount, false);
+                    if (r.wasCommitted()) FabricFluidHandler.this.extract(index, (int) Math.min(maxAmount, Integer.MAX_VALUE), false);
                 });
-                return FabricFluidHandler.this.extract(index, (int) maxAmount, true).getAmount();
+                return FabricFluidHandler.this.extract(index, (int) Math.min(maxAmount, Integer.MAX_VALUE), true).getAmount();
             }
             return 0;
         }

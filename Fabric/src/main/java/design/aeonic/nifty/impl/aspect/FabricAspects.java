@@ -14,6 +14,7 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,7 +39,7 @@ public class FabricAspects implements Aspects {
     // We don't need to cache these lookups, since the actual Aspect object does the caching for us if used properly
     @SuppressWarnings("unchecked")
     @Override
-    public <T> Aspect<T> query(Class<T> aspectClass, BlockEntity be, Direction direction) {
+    public <T> Aspect<T> query(Class<T> aspectClass, @Nullable BlockEntity be, @Nullable Direction direction) {
         BlockApiLookup<T, Direction> lookup = (BlockApiLookup<T, Direction>) blockLookupMap.get(aspectClass);
         if (lookup != null && be != null) {
             return Aspect.of(() -> lookup.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, direction));

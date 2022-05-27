@@ -36,8 +36,7 @@ public abstract class AbstractFluidSlot {
      * Simulates insertion.
      */
     public FluidStack simulateInsert(FluidStack stack) {
-        FluidStack temp = containedStack;
-        containedStack = temp.copy();
+        FluidStack temp = containedStack.copy();
         FluidStack ret = insert(stack);
         containedStack = temp;
         return ret;
@@ -47,8 +46,7 @@ public abstract class AbstractFluidSlot {
      * Simulates extraction.
      */
     public FluidStack simulateExtract(int amount) {
-        FluidStack temp = containedStack;
-        containedStack = temp.copy();
+        FluidStack temp = containedStack.copy();
         FluidStack ret = extract(amount);
         containedStack = temp;
         return ret;

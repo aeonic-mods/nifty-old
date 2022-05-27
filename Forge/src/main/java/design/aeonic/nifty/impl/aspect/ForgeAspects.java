@@ -163,7 +163,7 @@ public class ForgeAspects implements Aspects {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> Aspect<T> query(Class<T> aspectClass, BlockEntity be, Direction direction) {
+    public <T> Aspect<T> query(Class<T> aspectClass, @Nullable BlockEntity be, @Nullable Direction direction) {
         if (be == null) return Aspect.empty();
         Supplier<T> supplier = queryInternal(aspectClass, be, direction);
         if (supplier != null) {
@@ -213,7 +213,7 @@ public class ForgeAspects implements Aspects {
 
     @SuppressWarnings("unchecked")
     @Nullable
-    public <T> Supplier<T> queryInternal(Class<T> aspectClass, BlockEntity be, Direction direction) {
+    public <T> Supplier<T> queryInternal(Class<T> aspectClass, @Nullable BlockEntity be, @Nullable Direction direction) {
         if (blockLookups.containsKey(aspectClass)) {
             for (BlockEntityAspectLookup<?> lookup : blockLookups.get(aspectClass)) {
                 if (((BlockEntityAspectLookup<T>) lookup).find(be, direction) != null) {

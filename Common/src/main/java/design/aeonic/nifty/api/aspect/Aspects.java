@@ -42,7 +42,7 @@ public interface Aspects {
      * @param direction   the side of the block entity to query
      * @return an Aspect potentially wrapping the given object type
      */
-    <T> Aspect<T> query(Class<T> aspectClass, BlockEntity be, Direction direction);
+    <T> Aspect<T> query(Class<T> aspectClass, @Nullable BlockEntity be, @Nullable Direction direction);
 
     /**
      * Gets an Aspect of the given type from the given entity. If it doesn't have one, you'll receive an empty Aspect.<br><br>

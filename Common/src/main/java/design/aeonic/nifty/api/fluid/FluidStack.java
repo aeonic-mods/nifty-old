@@ -66,7 +66,7 @@ public class FluidStack {
     }
 
     public boolean canStack(FluidStack other) {
-        return isEmpty() || (fluid.isSame(other.fluid) && (tag.isEmpty() ? other.tag.isEmpty() : tag.equals(other.tag)));
+        return isEmpty() || other.isEmpty() || (fluid.isSame(other.fluid) && (tag.isEmpty() ? other.tag.isEmpty() : tag.equals(other.tag)));
     }
 
     public FluidStack split(int amount) {
@@ -114,11 +114,12 @@ public class FluidStack {
     }
 
     protected void checkEmpty() {
-        if (amount == 0 || this == EMPTY_STACK || fluid.isSame(Fluids.EMPTY)) {
+        if (this == FluidStack.EMPTY_STACK) isEmptyCache = true;
+        else if (amount == 0 || fluid.isSame(Fluids.EMPTY)) {
+            isEmptyCache = true;
             amount = 0;
             fluid = Fluids.EMPTY;
-            tag = new CompoundTag();
-            isEmptyCache = true;
+            if (!tag.isEmpty()) tag = new CompoundTag();
         }
     }
 

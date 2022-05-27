@@ -7,9 +7,7 @@ import design.aeonic.nifty.api.util.Constants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 
 import java.util.function.BiPredicate;
@@ -35,7 +33,7 @@ public record FluidVariantStorageWrapper(Storage<FluidVariant> storage) implemen
     public FluidStack insert(FluidStack stack, boolean simulate) {
         if (stack.isEmpty()) return stack;
         Transaction transaction = Transaction.openNested(Transaction.getCurrentUnsafe());
-        int inserted = (int) storage.insert(asFluidVariant(stack), stack.getAmount(), transaction);
+        int inserted = (int) Math.min(storage.insert(asFluidVariant(stack), stack.getAmount(), transaction), Integer.MAX_VALUE);
         if (simulate) transaction.abort();
         else transaction.commit();
         return stack.split(inserted);
@@ -68,7 +66,7 @@ public record FluidVariantStorageWrapper(Storage<FluidVariant> storage) implemen
             var view = iter.next();
             if (i == slot && !view.isResourceBlank()) {
                 FluidVariant resource = view.getResource();
-                ret = FabricFluidHandler.asFluidStack(resource, (int) view.extract(resource, amount, transaction));
+                ret = FabricFluidHandler.asFluidStack(resource, (int) Math.min(view.extract(resource, amount, transaction), Integer.MAX_VALUE));
             }
         }
         if (simulate) transaction.abort(); else transaction.commit();
@@ -111,7 +109,7 @@ public record FluidVariantStorageWrapper(Storage<FluidVariant> storage) implemen
         for (var iter = storage.iterator(transaction); iter.hasNext(); i++) {
             var view = iter.next();
             if (i == slot) {
-                ret = (int) view.getCapacity();
+                ret = (int) Math.min(view.getCapacity(), Integer.MAX_VALUE);
             }
         }
         transaction.abort();

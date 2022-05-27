@@ -1,7 +1,6 @@
 package design.aeonic.nifty.impl.item;
 
 import com.google.common.collect.Iterators;
-import design.aeonic.nifty.api.item.FluidHandler;
 import design.aeonic.nifty.api.item.ItemHandler;
 import design.aeonic.nifty.api.util.Constants;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -35,7 +34,7 @@ public record ItemVariantStorageWrapper(Storage<ItemVariant> storage) implements
     public ItemStack insert(ItemStack stack, boolean simulate) {
         if (stack.isEmpty()) return stack;
         Transaction transaction = Transaction.openNested(Transaction.getCurrentUnsafe());
-        int inserted = (int) storage.insert(ItemVariant.of(stack), stack.getCount(), transaction);
+        int inserted = (int) Math.min(storage.insert(ItemVariant.of(stack), stack.getCount(), transaction), Integer.MAX_VALUE);
         if (simulate) transaction.abort();
         else transaction.commit();
         return stack.split(inserted);
@@ -50,7 +49,7 @@ public record ItemVariantStorageWrapper(Storage<ItemVariant> storage) implements
             if (view.isResourceBlank()) continue;
             ItemVariant resource = view.getResource();
             if (itemPredicate.test(resource.getItem(), resource.getNbt())) {
-                ret = resource.toStack((int) view.extract(resource, amount, transaction));
+                ret = resource.toStack((int) Math.min(view.extract(resource, amount, transaction), Integer.MAX_VALUE));
                 break;
             }
         }
@@ -68,7 +67,7 @@ public record ItemVariantStorageWrapper(Storage<ItemVariant> storage) implements
             var view = iter.next();
             if (i == slot && !view.isResourceBlank()) {
                 ItemVariant item = view.getResource();
-                ret = item.toStack((int) view.extract(item, amount, transaction));
+                ret = item.toStack((int) Math.min(view.extract(item, amount, transaction), Integer.MAX_VALUE));
                 break;
             }
         }
@@ -107,7 +106,7 @@ public record ItemVariantStorageWrapper(Storage<ItemVariant> storage) implements
         for (var iter = storage.iterator(transaction); iter.hasNext(); i++) {
             var view = iter.next();
             if (i == slot) {
-                ret = (int) view.getCapacity();
+                ret = (int) Math.min(view.getCapacity(), Integer.MAX_VALUE);
             }
         }
         transaction.abort();

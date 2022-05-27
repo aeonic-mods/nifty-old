@@ -21,7 +21,7 @@ public class FabricItemHandler extends WrappingItemHandler implements Storage<It
 
     @Override
     public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
-        int amt = Math.min((int) maxAmount, resource.getItem().getMaxStackSize());
+        int amt = Math.min((int) Math.min(maxAmount, Integer.MAX_VALUE), resource.getItem().getMaxStackSize());
         transaction.addCloseCallback((t, r) -> {
             if (r.wasCommitted()) insert(resource.toStack(amt), false);
         });
@@ -31,9 +31,9 @@ public class FabricItemHandler extends WrappingItemHandler implements Storage<It
     @Override
     public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
         transaction.addCloseCallback((t, r) -> {
-            if (r.wasCommitted()) extract((item, tag) -> resource.getItem() == item && resource.getNbt().equals(tag), (int) maxAmount, false);
+            if (r.wasCommitted()) extract((item, tag) -> resource.getItem() == item && resource.getNbt().equals(tag), (int) Math.min(maxAmount, Integer.MAX_VALUE), false);
         });
-        return extract((item, tag) -> resource.getItem() == item && resource.getNbt().equals(tag), (int) maxAmount, true).getCount();
+        return extract((item, tag) -> resource.getItem() == item && resource.getNbt().equals(tag), (int) Math.min(maxAmount, Integer.MAX_VALUE), true).getCount();
     }
 
     @Override
@@ -54,9 +54,9 @@ public class FabricItemHandler extends WrappingItemHandler implements Storage<It
             ItemStack stored = get(index);
             if (maxAmount > 0 && resource.matches(stored)) {
                 transaction.addCloseCallback((t, r) -> {
-                    if (r.wasCommitted()) FabricItemHandler.this.extract(index, (int) maxAmount, false);
+                    if (r.wasCommitted()) FabricItemHandler.this.extract(index, (int) Math.min(maxAmount, Integer.MAX_VALUE), false);
                 });
-                return FabricItemHandler.this.extract(index, (int) maxAmount, true).getCount();
+                return FabricItemHandler.this.extract(index, (int) Math.min(maxAmount, Integer.MAX_VALUE), true).getCount();
             }
             return 0;
         }
