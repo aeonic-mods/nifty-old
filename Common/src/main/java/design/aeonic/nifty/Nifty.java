@@ -33,7 +33,7 @@ public class Nifty {
     public static final Aspects ASPECTS = Services.load(Aspects.class);
     /**
      * Includes methods for wrapping certain Nifty objects in a platform-specific implementation for compatibility with
-     * existing systems (ie item & other transfer handlers, etc)
+     * existing systems (ie item and other transfer handlers, etc)
      */
     public static final Wrappers WRAPPERS = Services.load(Wrappers.class);
 
