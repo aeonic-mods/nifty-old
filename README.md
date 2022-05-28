@@ -32,23 +32,26 @@ Nifty is a cross-platform library mod that serves as a basis for tech mods targe
       * Includes a simplified implementation using Slot objects to describe an inventory's functionality
     * Fluid handlers, same as above
     * Energy handlers, same as above + compat for Reborn Team's Energy API on Fabric
+* Modular UI system
+* [UiElementTemplates](Common/src/main/java/design/aeonic/nifty/api/client/ui/UiElementTemplate.java), which can be used to make a UiElement instance for a given Screen (or other rendering scenario)
+  * A few default templates classes
+    * [StaticUiElementTemplate](Common/src/main/java/design/aeonic/nifty/api/client/ui/template/StaticUiElementTemplate.java) - for boring, static UI elements
+    * [FillingUiElementTemplate](Common/src/main/java/design/aeonic/nifty/api/client/ui/template/FillingUiElementTemplate.java) - for UI elements that draw differently with a given fill progress, such as vanilla furnace recipe arrows and burn time indicators
+    * [TankUiElementTemplate](Common/src/main/java/design/aeonic/nifty/api/client/ui/template/TankUiElementTemplate.java) - for tanks that render with a fluid fill based on the AbstractTankSlot they're passed at render-time
+  * A [default UI set](Common/src/main/java/design/aeonic/nifty/api/client/ui/UiSets.java) with vanilla ui assets and vanilla-style extras, such as fluid tanks of various sizes
 
 ### Planned
 
-* Aspect interoperability with a simplified UI system, somewhat akin to Extra Utils' old machine interface mechanics
-    * Easy I/O definitions in the blockentity that can be referenced and displayed with ease from a screen
+* More UI stuff
+  * A simple screen that renders elements and their tooltips from a list
+  * Extra templates
     * Energy usage over time graph like Satisfactory's would be very cool
+    * Correct itemstack placement for offset slots suchas the vanilla set's output slot
 * Tentatively, multiblocks
-* Abstract processing implementations
-    * Easily create recipes
-    * Base block and BE classes to utilize those recipes
-    * Tie into Aspect-based blockentities and menu/screens
 * Rendering hooks
     * Holograms
-    * UI abstraction
-      * Modular screens for block entities (so, menus too) + standalone screens
-      * Selection systems with item settings and syncing
-          * Radial menus from abandoned multitool project
+    * Selection systems with item settings and syncing
+        * Radial menus from abandoned multitool project
     * Math & other rendering utils
 * Abstracted configs
     * Avoid the extra dependency on Forge
