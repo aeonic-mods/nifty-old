@@ -1,8 +1,8 @@
 package design.aeonic.nifty.api.client.ui;
 
-import design.aeonic.nifty.api.client.ui.element.FillingUiElementTemplate;
-import design.aeonic.nifty.api.client.ui.element.StaticUiElementTemplate;
-import design.aeonic.nifty.api.client.ui.element.TankUiElementTemplate;
+import design.aeonic.nifty.api.client.ui.template.FillingUiElementTemplate;
+import design.aeonic.nifty.api.client.ui.template.StaticUiElementTemplate;
+import design.aeonic.nifty.api.client.ui.template.TankUiElementTemplate;
 import design.aeonic.nifty.api.util.Constants;
 import net.minecraft.resources.ResourceLocation;
 

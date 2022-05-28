@@ -1,4 +1,4 @@
-package design.aeonic.nifty.api.client.ui.element;
+package design.aeonic.nifty.api.client.ui.template;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import design.aeonic.nifty.api.client.ui.Texture;
