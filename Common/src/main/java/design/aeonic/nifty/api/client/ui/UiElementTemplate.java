@@ -1,6 +1,11 @@
 package design.aeonic.nifty.api.client.ui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.network.chat.Component;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Describes a UI element that can be drawn to the screen.
@@ -30,25 +35,31 @@ public interface UiElementTemplate<C> {
      */
     int getHeight();
 
-    default UiElement<C> at(int x, int y, int zOffset) {
-        return new UiElement<>(this, x, y, zOffset);
+    /**
+     * Makes a ui element from this template.
+     *
+     * @param context a getter for the element's context object
+     * @param x       the element's absolute x position
+     * @param y       the element's absolute y position
+     * @param zOffset the element's z position (blit offset)
+     * @return the new element
+     */
+    default UiElement<C> make(Supplier<C> context, int x, int y, int zOffset) {
+        return new UiElement<>(this, context, x, y, zOffset);
     }
 
-    record UiElement<C>(UiElementTemplate<C> template, int x, int y, int zOffset) {
+    /**
+     * Checks whether this component has a tooltip.
+     */
+    default boolean hasTooltip() {
+        return false;
+    }
 
-        public void draw(PoseStack stack, C ctx) {
-            template.draw(stack, x, y, zOffset, ctx);
-        }
-
-        /**
-         * Checks if a coordinate is within this element's screen area.
-         */
-        public boolean isWithin(int x, int y) {
-            int right = this.x + template().getWidth();
-            int bottom = this.y + template().getHeight();
-            return this.x <= x && x <= right && this.y <= y && y <= bottom;
-        }
-
+    /**
+     * If the component has a tooltip, return tooltip elements for the given context.
+     */
+    default List<Component> getTooltip(C ctx) {
+        return Collections.emptyList();
     }
 
 }

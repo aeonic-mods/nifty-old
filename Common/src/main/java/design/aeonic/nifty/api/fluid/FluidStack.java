@@ -1,11 +1,20 @@
 package design.aeonic.nifty.api.fluid;
 
+import design.aeonic.nifty.Nifty;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents fluids in a tank or somethin. Up to you man.<br><br>
@@ -153,6 +162,33 @@ public class FluidStack {
         if (amount != that.amount) return false;
         if (!fluid.equals(that.fluid)) return false;
         return tag.equals(that.tag);
+    }
+
+    public List<Component> getTooltip() {
+        List<Component> tooltip = new ArrayList<>();
+
+        ResourceLocation key = Registry.FLUID.getKey(fluid);
+        CompoundTag compoundtag = tag.getCompound("display");
+        if (compoundtag.contains("Name", 8)) {
+            try {
+                Component component = Component.Serializer.fromJson(compoundtag.getString("Name"));
+                if (component != null) {
+                    tooltip.add(component);
+                }
+
+                compoundtag.remove("Name");
+            } catch (Exception exception) {
+                compoundtag.remove("Name");
+                tooltip.add(new TextComponent(StringUtils.capitalize(key.getPath())));
+            }
+        }
+        else {
+            tooltip.add(new TextComponent(StringUtils.capitalize(key.getPath())));
+        }
+
+        // TODO: Add bucket item tooltips? Somewhere to register extra tooltip info?
+        tooltip.add(new TextComponent(Nifty.PLATFORM.getModDisplayName(key.getNamespace()).orElse("Minecraft")).withStyle(ChatFormatting.ITALIC, ChatFormatting.BLUE));
+        return tooltip;
     }
 
 }

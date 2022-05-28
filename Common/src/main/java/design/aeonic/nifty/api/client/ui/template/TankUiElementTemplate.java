@@ -10,6 +10,9 @@ import design.aeonic.nifty.api.client.ui.UiElementTemplate;
 import design.aeonic.nifty.api.fluid.AbstractTank;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.network.chat.Component;
+
+import java.util.List;
 
 public class TankUiElementTemplate implements UiElementTemplate<AbstractTank> {
 
@@ -101,6 +104,16 @@ public class TankUiElementTemplate implements UiElementTemplate<AbstractTank> {
 
         // Draw the tank overlay
         tankOverlay.draw(stack, x, y, zOffset, null);
+    }
+
+    @Override
+    public boolean hasTooltip() {
+        return true;
+    }
+
+    @Override
+    public List<Component> getTooltip(AbstractTank ctx) {
+        return ctx.get().getTooltip();
     }
 
 }
