@@ -1,6 +1,7 @@
 package design.aeonic.nifty;
 
 import design.aeonic.nifty.api.aspect.Aspects;
+import design.aeonic.nifty.api.client.RenderHelper;
 import design.aeonic.nifty.api.core.Factories;
 import design.aeonic.nifty.api.core.PlatformInfo;
 import design.aeonic.nifty.api.core.Wrappers;
@@ -36,6 +37,10 @@ public class Nifty {
      * existing systems (ie item and other transfer handlers, etc)
      */
     public static final Wrappers WRAPPERS = Services.load(Wrappers.class);
+    /**
+     * Includes miscellaneous helper methods for various rendering tasks.
+     */
+    public static final RenderHelper RENDER_HELPER = Services.load(RenderHelper.class);
 
     public static void init() {
         // Default Aspects
