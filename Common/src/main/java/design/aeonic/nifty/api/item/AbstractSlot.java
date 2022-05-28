@@ -16,20 +16,6 @@ public abstract class AbstractSlot {
     }
 
     /**
-     * Gets the x position of this slot in a screen.
-     */
-    public int getX() {
-        return -1;
-    }
-
-    /**
-     * Gets the y position of this slot in a screen.
-     */
-    public int getY() {
-        return -1;
-    }
-
-    /**
      * Checks whether the given item is allowed in this slot. To make an "output-only" slot, just return false here
      * and move items to this slot with {@link #forceInsert(ItemStack)}.
      *

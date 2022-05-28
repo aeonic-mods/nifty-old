@@ -119,42 +119,4 @@ public abstract class AbstractFluidSlot {
         containedStack = stack;
     }
 
-    // Screen display description
-
-    /**
-     * Gets the x position of this slot in a screen.
-     */
-    public int getX() {
-        return -1;
-    }
-
-    /**
-     * Gets the y position of this slot in a screen.
-     */
-    public int getY() {
-        return -1;
-    }
-
-    /**
-     * Gets the width of this slot's fluid display in a screen.
-     */
-    public int getWidth() {
-        return 16;
-    }
-
-    /**
-     * Gets the height of this slot's fluid display in a screen.
-     */
-    public int getHeight() {
-        return 64;
-    }
-
-    /**
-     * Gets this slot's fluid display fill axis.<br><br>
-     * Must be x or y: if x, will fill from left to right; if y, from bottom to top.
-     */
-    public Direction.Axis getFillAxis() {
-        return Direction.Axis.Y;
-    }
-
 }
