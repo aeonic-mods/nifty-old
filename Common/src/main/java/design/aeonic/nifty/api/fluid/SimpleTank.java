@@ -4,19 +4,19 @@ import java.util.function.Predicate;
 
 /**
  * A simple fluid slot implementation. Much of this class mirrors {@link design.aeonic.nifty.api.item.SimpleSlot}.
- * More documentation can be found in the parent class {@link AbstractFluidSlot}.
+ * More documentation can be found in the parent class {@link AbstractTank}.
  */
-public class SimpleFluidSlot extends AbstractFluidSlot {
+public class SimpleTank extends AbstractTank {
 
     protected Runnable onChanged;
     protected Predicate<FluidStack> allowedPredicate;
     protected int capacity;
 
-    public SimpleFluidSlot(Runnable onChanged, int capacity) {
+    public SimpleTank(Runnable onChanged, int capacity) {
         this(onChanged, $ -> true, capacity);
     }
 
-    public SimpleFluidSlot(Runnable onChanged, Predicate<FluidStack> allowedPredicate, int capacity) {
+    public SimpleTank(Runnable onChanged, Predicate<FluidStack> allowedPredicate, int capacity) {
         this.onChanged = onChanged;
         this.allowedPredicate = allowedPredicate;
         this.capacity = capacity;

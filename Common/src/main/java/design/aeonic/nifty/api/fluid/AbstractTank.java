@@ -1,12 +1,10 @@
 package design.aeonic.nifty.api.fluid;
 
-import net.minecraft.core.Direction;
-
-public abstract class AbstractFluidSlot {
+public abstract class AbstractTank {
 
     protected FluidStack containedStack;
 
-    public AbstractFluidSlot() {
+    public AbstractTank() {
         this.containedStack = FluidStack.EMPTY_STACK.copy();
     }
 
