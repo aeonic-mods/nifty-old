@@ -1,7 +1,8 @@
-package design.aeonic.nifty.impl.aspect;
+package design.aeonic.nifty.impl.wrappers;
 
 import design.aeonic.nifty.api.energy.EnergyHandler;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 
 public class WrappingEnergyHandler implements EnergyHandler {
 
@@ -49,6 +50,16 @@ public class WrappingEnergyHandler implements EnergyHandler {
     @Override
     public void deserialize(CompoundTag tag) {
         parent.deserialize(tag);
+    }
+
+    @Override
+    public void toNetwork(FriendlyByteBuf buf) {
+        parent.toNetwork(buf);
+    }
+
+    @Override
+    public void fromNetwork(FriendlyByteBuf buf) {
+        parent.fromNetwork(buf);
     }
 
 }

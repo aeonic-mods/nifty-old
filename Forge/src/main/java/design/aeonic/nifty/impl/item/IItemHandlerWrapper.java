@@ -3,6 +3,7 @@ package design.aeonic.nifty.impl.item;
 import design.aeonic.nifty.api.item.ItemHandler;
 import design.aeonic.nifty.api.util.Constants;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.items.IItemHandler;
@@ -84,4 +85,11 @@ public class IItemHandlerWrapper implements ItemHandler {
 
     @Override
     public void deserialize(CompoundTag tag) {}
+
+    @Override
+    public void toNetwork(FriendlyByteBuf buf) {}
+
+    @Override
+    public void fromNetwork(FriendlyByteBuf buf) {}
+
 }

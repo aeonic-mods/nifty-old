@@ -5,7 +5,7 @@ import design.aeonic.nifty.api.item.FluidHandler;
 import design.aeonic.nifty.api.item.ItemHandler;
 import design.aeonic.nifty.impl.aspect.FabricAspects;
 import design.aeonic.nifty.impl.energy.EnergyStorageWrapper;
-import design.aeonic.nifty.impl.energy.RebornEnergyHandler;
+import design.aeonic.nifty.impl.energy.FabricEnergyHandler;
 import design.aeonic.nifty.impl.fluid.FabricFluidHandler;
 import design.aeonic.nifty.impl.fluid.FluidVariantStorageWrapper;
 import design.aeonic.nifty.impl.item.FabricItemHandler;
@@ -19,8 +19,6 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import team.reborn.energy.api.EnergyStorage;
-import team.reborn.energy.api.EnergyStorageUtil;
-import team.reborn.energy.impl.EnergyImpl;
 
 import java.util.function.Supplier;
 
@@ -94,12 +92,12 @@ public class FabricNifty {
         EnergyStorage.SIDED.registerFallback((level, pos, state, be, dir) -> {
             if (be == null) return null;
             Supplier<EnergyHandler> sup = ASPECTS.queryInternal(EnergyHandler.class, be, dir);
-            if (sup != null) return (RebornEnergyHandler) sup.get();
+            if (sup != null) return (FabricEnergyHandler) sup.get();
             return null;
         });
         EnergyStorage.ITEM.registerFallback((stack, ctx) -> {
             Supplier<EnergyHandler> sup = ASPECTS.queryInternal(EnergyHandler.class, stack);
-            if (sup != null) return (RebornEnergyHandler) sup.get();
+            if (sup != null) return (FabricEnergyHandler) sup.get();
             return null;
         });
 

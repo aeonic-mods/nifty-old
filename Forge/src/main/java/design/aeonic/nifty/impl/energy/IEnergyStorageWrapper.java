@@ -2,6 +2,7 @@ package design.aeonic.nifty.impl.energy;
 
 import design.aeonic.nifty.api.energy.EnergyHandler;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class IEnergyStorageWrapper implements EnergyHandler {
@@ -49,5 +50,11 @@ public class IEnergyStorageWrapper implements EnergyHandler {
 
     @Override
     public void deserialize(CompoundTag tag) {}
+
+    @Override
+    public void toNetwork(FriendlyByteBuf buf) {}
+
+    @Override
+    public void fromNetwork(FriendlyByteBuf buf) {}
 
 }

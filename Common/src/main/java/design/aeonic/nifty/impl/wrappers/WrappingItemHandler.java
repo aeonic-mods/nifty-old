@@ -1,7 +1,8 @@
-package design.aeonic.nifty.impl.aspect;
+package design.aeonic.nifty.impl.wrappers;
 
 import design.aeonic.nifty.api.item.ItemHandler;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
@@ -68,6 +69,16 @@ public class WrappingItemHandler implements ItemHandler {
     @Override
     public void deserialize(CompoundTag tag) {
         parent.deserialize(tag);
+    }
+
+    @Override
+    public void toNetwork(FriendlyByteBuf buf) {
+        parent.toNetwork(buf);
+    }
+
+    @Override
+    public void fromNetwork(FriendlyByteBuf buf) {
+        parent.fromNetwork(buf);
     }
 
 }

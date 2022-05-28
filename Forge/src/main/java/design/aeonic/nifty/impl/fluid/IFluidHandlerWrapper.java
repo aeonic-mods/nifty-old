@@ -4,6 +4,7 @@ import design.aeonic.nifty.api.fluid.FluidStack;
 import design.aeonic.nifty.api.item.FluidHandler;
 import design.aeonic.nifty.api.util.Constants;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
@@ -79,5 +80,11 @@ public class IFluidHandlerWrapper implements FluidHandler {
 
     @Override
     public void deserialize(CompoundTag tag) {}
+
+    @Override
+    public void toNetwork(FriendlyByteBuf buf) {}
+
+    @Override
+    public void fromNetwork(FriendlyByteBuf buf) {}
 
 }

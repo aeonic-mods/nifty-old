@@ -1,8 +1,9 @@
-package design.aeonic.nifty.impl.aspect;
+package design.aeonic.nifty.impl.wrappers;
 
 import design.aeonic.nifty.api.fluid.FluidStack;
 import design.aeonic.nifty.api.item.FluidHandler;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.material.Fluid;
 
 import java.util.function.BiPredicate;
@@ -68,6 +69,16 @@ public class WrappingFluidHandler implements FluidHandler {
     @Override
     public void deserialize(CompoundTag tag) {
         parent.deserialize(tag);
+    }
+
+    @Override
+    public void toNetwork(FriendlyByteBuf buf) {
+        parent.toNetwork(buf);
+    }
+
+    @Override
+    public void fromNetwork(FriendlyByteBuf buf) {
+        parent.fromNetwork(buf);
     }
 
 }

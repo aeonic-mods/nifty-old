@@ -1,7 +1,7 @@
 package design.aeonic.nifty.impl.energy;
 
 import design.aeonic.nifty.api.energy.EnergyHandler;
-import design.aeonic.nifty.impl.aspect.WrappingEnergyHandler;
+import design.aeonic.nifty.impl.wrappers.WrappingEnergyHandler;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class ForgeEnergyHandler extends WrappingEnergyHandler implements IEnergyStorage {

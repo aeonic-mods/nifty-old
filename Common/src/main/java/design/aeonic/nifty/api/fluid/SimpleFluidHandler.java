@@ -10,17 +10,17 @@ import net.minecraft.world.level.material.Fluid;
 import java.util.function.BiPredicate;
 
 /**
- * A simple fluid handler implementation that uses {@link AbstractFluidSlot} instances to describe functionality.
+ * A simple fluid handler implementation that uses {@link AbstractTank} instances to describe functionality.
  */
 public class SimpleFluidHandler implements FluidHandler {
 
-    private final AbstractFluidSlot[] slots;
+    private final AbstractTank[] slots;
 
-    public SimpleFluidHandler(AbstractFluidSlot... slots) {
-        this.slots = slots;
+    public SimpleFluidHandler(AbstractTank... tanks) {
+        this.slots = tanks;
     }
 
-    public AbstractFluidSlot getSlot(int index) {
+    public AbstractTank getSlot(int index) {
         return slots[index];
     }
 
@@ -89,7 +89,7 @@ public class SimpleFluidHandler implements FluidHandler {
         CompoundTag tag = new CompoundTag();
         ListTag list = tag.getList("Slots", Tag.TAG_COMPOUND);
 
-        for (AbstractFluidSlot slot : slots) {
+        for (AbstractTank slot : slots) {
             list.add(slot.get().toNbt());
         }
         tag.put("Slots", list);
@@ -107,14 +107,14 @@ public class SimpleFluidHandler implements FluidHandler {
 
     @Override
     public void toNetwork(FriendlyByteBuf buf) {
-        for (AbstractFluidSlot slot: slots) {
+        for (AbstractTank slot: slots) {
             slot.get().toNetwork(buf);
         }
     }
 
     @Override
     public void fromNetwork(FriendlyByteBuf buf) {
-        for (AbstractFluidSlot slot: slots) {
+        for (AbstractTank slot: slots) {
             slot.set(FluidStack.fromNetwork(buf));
         }
     }

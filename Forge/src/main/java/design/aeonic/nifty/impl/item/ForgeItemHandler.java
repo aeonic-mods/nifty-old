@@ -1,7 +1,7 @@
 package design.aeonic.nifty.impl.item;
 
 import design.aeonic.nifty.api.item.ItemHandler;
-import design.aeonic.nifty.impl.aspect.WrappingItemHandler;
+import design.aeonic.nifty.impl.wrappers.WrappingItemHandler;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 

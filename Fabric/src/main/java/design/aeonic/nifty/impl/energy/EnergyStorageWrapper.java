@@ -3,11 +3,12 @@ package design.aeonic.nifty.impl.energy;
 import design.aeonic.nifty.api.energy.EnergyHandler;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import team.reborn.energy.api.EnergyStorage;
 
 /**
  * An energy handler implementation that defers to an existing Reborn Energy Storage.
- * Essentially the inverse of {@link RebornEnergyHandler}
+ * Essentially the inverse of {@link FabricEnergyHandler}
  */
 public record EnergyStorageWrapper(EnergyStorage storage) implements EnergyHandler {
 
@@ -56,5 +57,11 @@ public record EnergyStorageWrapper(EnergyStorage storage) implements EnergyHandl
 
     @Override
     public void deserialize(CompoundTag tag) {}
+
+    @Override
+    public void toNetwork(FriendlyByteBuf buf) {}
+
+    @Override
+    public void fromNetwork(FriendlyByteBuf buf) {}
 
 }

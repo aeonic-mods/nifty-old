@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
@@ -125,5 +126,11 @@ public record ItemVariantStorageWrapper(Storage<ItemVariant> storage) implements
 
     @Override
     public void deserialize(CompoundTag tag) {}
+
+    @Override
+    public void toNetwork(FriendlyByteBuf buf) {}
+
+    @Override
+    public void fromNetwork(FriendlyByteBuf buf) {}
 
 }

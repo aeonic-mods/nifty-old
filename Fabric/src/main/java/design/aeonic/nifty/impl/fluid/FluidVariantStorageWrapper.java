@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.material.Fluid;
 
 import java.util.function.BiPredicate;
@@ -123,6 +124,12 @@ public record FluidVariantStorageWrapper(Storage<FluidVariant> storage) implemen
 
     @Override
     public void deserialize(CompoundTag tag) {}
+
+    @Override
+    public void toNetwork(FriendlyByteBuf buf) {}
+
+    @Override
+    public void fromNetwork(FriendlyByteBuf buf) {}
 
     public static FluidVariant asFluidVariant(FluidStack stack) {
         return FluidVariant.of(stack.getFluid(), stack.getTag());

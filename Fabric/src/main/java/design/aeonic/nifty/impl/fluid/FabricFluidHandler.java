@@ -2,7 +2,7 @@ package design.aeonic.nifty.impl.fluid;
 
 import design.aeonic.nifty.api.fluid.FluidStack;
 import design.aeonic.nifty.api.item.FluidHandler;
-import design.aeonic.nifty.impl.aspect.WrappingFluidHandler;
+import design.aeonic.nifty.impl.wrappers.WrappingFluidHandler;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;

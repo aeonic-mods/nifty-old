@@ -1,16 +1,16 @@
 package design.aeonic.nifty.impl.energy;
 
 import design.aeonic.nifty.api.energy.EnergyHandler;
-import design.aeonic.nifty.impl.aspect.WrappingEnergyHandler;
+import design.aeonic.nifty.impl.wrappers.WrappingEnergyHandler;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import team.reborn.energy.api.EnergyStorage;
 
 /**
  * An energy handler wrapper with compatibility for Team Reborn's energy API.
  */
-public class RebornEnergyHandler extends WrappingEnergyHandler implements EnergyStorage {
+public class FabricEnergyHandler extends WrappingEnergyHandler implements EnergyStorage {
 
-    public RebornEnergyHandler(EnergyHandler parent) {
+    public FabricEnergyHandler(EnergyHandler parent) {
         super(parent);
     }
 
