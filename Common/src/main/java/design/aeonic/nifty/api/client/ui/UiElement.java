@@ -19,8 +19,8 @@ public record UiElement<C>(UiElementTemplate<C> template, Supplier<C> contextGet
      * Checks if a coordinate is within this element's screen area.
      */
     public boolean isWithin(int x, int y) {
-        int right = this.x + template().getWidth();
-        int bottom = this.y + template().getHeight();
+        int right = this.x + template().getWidth() - 1;
+        int bottom = this.y + template().getHeight() - 1;
         return this.x <= x && x <= right && this.y <= y && y <= bottom;
     }
 
