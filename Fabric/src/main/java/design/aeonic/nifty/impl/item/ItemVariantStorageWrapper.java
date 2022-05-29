@@ -2,7 +2,7 @@ package design.aeonic.nifty.impl.item;
 
 import com.google.common.collect.Iterators;
 import design.aeonic.nifty.api.item.ItemHandler;
-import design.aeonic.nifty.api.util.Constants;
+import design.aeonic.nifty.api.core.Constants;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;

@@ -1,5 +1,6 @@
 package design.aeonic.nifty.api.item;
 
+import design.aeonic.nifty.api.util.Wrappers;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
@@ -10,7 +11,7 @@ import java.util.function.BiPredicate;
 /**
  * An aspect that allows providers to contain items which can be inserted and extracted in a specified manner.<br><br>
  * If you're utilizing an ItemHandler object anywhere you want it to be available to other machines/blocks/whatever,
- * you should probably run it through {@link design.aeonic.nifty.api.core.Wrappers#itemHandler(ItemHandler)} to wrap it
+ * you should probably run it through {@link Wrappers#itemHandler(ItemHandler)} to wrap it
  * in an implementation that will work properly with other Forge and Fabric systems.
  */
 public interface ItemHandler {

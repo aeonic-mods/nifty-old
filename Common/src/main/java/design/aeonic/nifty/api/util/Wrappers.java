@@ -1,4 +1,4 @@
-package design.aeonic.nifty.api.core;
+package design.aeonic.nifty.api.util;
 
 import design.aeonic.nifty.api.energy.EnergyHandler;
 import design.aeonic.nifty.api.item.FluidHandler;

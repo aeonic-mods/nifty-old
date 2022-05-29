@@ -1,4 +1,4 @@
-package design.aeonic.nifty.api.util;
+package design.aeonic.nifty.api.core;
 
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;

@@ -1,5 +1,7 @@
 package design.aeonic.nifty.api.util;
 
+import design.aeonic.nifty.api.core.Constants;
+
 import java.util.ServiceLoader;
 
 public class Services {

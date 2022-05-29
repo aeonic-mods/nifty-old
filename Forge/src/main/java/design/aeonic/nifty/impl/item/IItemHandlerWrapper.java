@@ -1,7 +1,7 @@
 package design.aeonic.nifty.impl.item;
 
 import design.aeonic.nifty.api.item.ItemHandler;
-import design.aeonic.nifty.api.util.Constants;
+import design.aeonic.nifty.api.core.Constants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;

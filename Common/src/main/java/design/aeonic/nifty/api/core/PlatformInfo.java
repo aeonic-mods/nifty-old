@@ -1,7 +1,5 @@
 package design.aeonic.nifty.api.core;
 
-import design.aeonic.nifty.api.util.Platform;
-
 import java.util.Optional;
 
 /**

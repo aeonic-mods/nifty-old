@@ -4,7 +4,7 @@ import design.aeonic.nifty.api.client.ui.template.EnergyUiElementTemplate;
 import design.aeonic.nifty.api.client.ui.template.FillingUiElementTemplate;
 import design.aeonic.nifty.api.client.ui.template.StaticUiElementTemplate;
 import design.aeonic.nifty.api.client.ui.template.TankUiElementTemplate;
-import design.aeonic.nifty.api.util.Constants;
+import design.aeonic.nifty.api.core.Constants;
 import net.minecraft.resources.ResourceLocation;
 
 /**

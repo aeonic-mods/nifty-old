@@ -3,7 +3,7 @@ package design.aeonic.nifty;
 import design.aeonic.nifty.api.energy.EnergyHandler;
 import design.aeonic.nifty.api.item.FluidHandler;
 import design.aeonic.nifty.api.item.ItemHandler;
-import design.aeonic.nifty.api.util.Constants;
+import design.aeonic.nifty.api.core.Constants;
 import design.aeonic.nifty.impl.aspect.ForgeAspects;
 import design.aeonic.nifty.impl.energy.ForgeEnergyHandler;
 import design.aeonic.nifty.impl.energy.IEnergyStorageWrapper;
