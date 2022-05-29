@@ -28,7 +28,7 @@ public class ForgePlatformInfo implements PlatformInfo {
     @Override
     public Optional<String> getModDisplayName(String modId) {
         if (isModLoaded(modId)) {
-            Optional<ModContainer> container = ModList.get().getModObjectById(modId);
+            Optional<? extends ModContainer> container = ModList.get().getModContainerById(modId);
             if (container.isPresent()) {
                 return Optional.of(container.get().getModInfo().getDisplayName());
             }

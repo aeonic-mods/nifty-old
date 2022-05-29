@@ -13,6 +13,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import org.apache.commons.lang3.StringUtils;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -185,6 +186,8 @@ public class FluidStack {
         else {
             tooltip.add(new TextComponent(StringUtils.capitalize(key.getPath())));
         }
+
+        tooltip.add(new TextComponent(DecimalFormat.getIntegerInstance().format(amount) + " mb").withStyle(ChatFormatting.GRAY));
 
         // TODO: Add bucket item tooltips? Somewhere to register extra tooltip info?
         tooltip.add(new TextComponent(Nifty.PLATFORM.getModDisplayName(key.getNamespace()).orElse("Minecraft")).withStyle(ChatFormatting.ITALIC, ChatFormatting.BLUE));
