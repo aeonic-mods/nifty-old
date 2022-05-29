@@ -1,6 +1,8 @@
 package design.aeonic.nifty.api.fluid;
 
-public abstract class AbstractTank {
+import design.aeonic.nifty.api.client.ui.template.FillingUiElementTemplate;
+
+public abstract class AbstractTank implements FillingUiElementTemplate.FillLevel {
 
     protected FluidStack containedStack;
 
@@ -117,4 +119,8 @@ public abstract class AbstractTank {
         containedStack = stack;
     }
 
+    @Override
+    public float getFillLevel() {
+        return get().getAmount() / (float) getCapacity();
+    }
 }

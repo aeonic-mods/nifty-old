@@ -38,7 +38,8 @@ Nifty is a cross-platform library mod that serves as a basis for tech mods targe
     * [StaticUiElementTemplate](Common/src/main/java/design/aeonic/nifty/api/client/ui/template/StaticUiElementTemplate.java) - for boring, static UI elements
     * [FillingUiElementTemplate](Common/src/main/java/design/aeonic/nifty/api/client/ui/template/FillingUiElementTemplate.java) - for UI elements that draw differently with a given fill progress, such as vanilla furnace recipe arrows and burn time indicators
     * [TankUiElementTemplate](Common/src/main/java/design/aeonic/nifty/api/client/ui/template/TankUiElementTemplate.java) - for tanks that render with a fluid fill based on the AbstractTankSlot they're passed at render-time
-  * A [default UI set](Common/src/main/java/design/aeonic/nifty/api/client/ui/UiSets.java) with vanilla ui assets and vanilla-style extras, such as fluid tanks of various sizes
+  * A [default UI set](Common/src/main/java/design/aeonic/nifty/api/client/ui/UiSets.java) with vanilla ui assets and vanilla-style extras, such as fluid tanks and energy meters of various sizes
+  * A bit messy, may revisit in the future
 
 ### Planned
 

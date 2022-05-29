@@ -1,8 +1,17 @@
 package design.aeonic.nifty.api.energy;
 
+import design.aeonic.nifty.Nifty;
+import design.aeonic.nifty.api.client.ui.template.FillingUiElementTemplate;
 import design.aeonic.nifty.api.item.ItemHandler;
+import design.aeonic.nifty.api.util.Platform;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+
+import java.text.DecimalFormat;
+import java.util.List;
 
 /**
  * An aspect that allows providers to contain and transfer energy.<br><br>
@@ -10,7 +19,14 @@ import net.minecraft.network.FriendlyByteBuf;
  * as is the nature of power.<br><br>
  * On Forge, energy is in terms of FE - on Fabric, who knows, man?
  */
-public interface EnergyHandler {
+public interface EnergyHandler extends FillingUiElementTemplate.FillLevel {
+
+    /**
+     * Gets the standard energy units for the current platform.
+     */
+    static String getUnits() {
+        return Nifty.PLATFORM.getPlatform() == Platform.FORGE ? "FE" : "E";
+    }
 
     /**
      * Gets the capacity of this handler.
@@ -71,5 +87,16 @@ public interface EnergyHandler {
      * Reads and reconstructs this energy handler from a network packet.
      */
     void fromNetwork(FriendlyByteBuf buf);
+
+    @Override
+    default float getFillLevel() {
+        return getAmount() / (float) getCapacity();
+    }
+
+    default List<Component> getTooltip() {
+        return List.of(
+                new TextComponent(String.format("%s/%s %s", DecimalFormat.getIntegerInstance().format(
+                        getAmount()), DecimalFormat.getIntegerInstance().format(getCapacity()), getUnits())));
+    }
 
 }

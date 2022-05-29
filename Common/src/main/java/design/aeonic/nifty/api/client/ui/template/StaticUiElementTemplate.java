@@ -1,5 +1,6 @@
 package design.aeonic.nifty.api.client.ui.template;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import design.aeonic.nifty.api.client.ui.Texture;
 import design.aeonic.nifty.api.client.ui.UiElementTemplate;
@@ -11,13 +12,13 @@ import java.util.Objects;
  * A simple static UI element.
  *
  */
-public final class StaticUiElementTemplate implements UiElementTemplate<Void> {
+public class StaticUiElementTemplate implements UiElementTemplate<Void> {
 
-    private final Texture texture;
-    private final int width;
-    private final int height;
-    private final int u;
-    private final int v;
+    protected final Texture texture;
+    protected final int width;
+    protected final int height;
+    protected final int u;
+    protected final int v;
 
     /**
      * @param texture the texture map to draw from
@@ -46,6 +47,7 @@ public final class StaticUiElementTemplate implements UiElementTemplate<Void> {
 
     @Override
     public void draw(PoseStack stack, int x, int y, int zOffset, Void unused) {
+        RenderSystem.setShaderColor(1, 1, 1, 1);
         texture.setup();
         Screen.blit(stack, x, y, zOffset, u, v, width, height, texture.width(), texture.height());
     }
