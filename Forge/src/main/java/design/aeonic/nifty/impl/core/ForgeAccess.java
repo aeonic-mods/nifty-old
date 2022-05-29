@@ -4,6 +4,8 @@ import design.aeonic.nifty.api.util.Access;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -34,11 +36,6 @@ public class ForgeAccess implements Access {
     }
 
     @Override
-    public <M extends AbstractContainerMenu, S extends Screen & MenuAccess<M>> void registerScreen(MenuType<M> menuType, TriFunction<M, Inventory, Component, S> constructor) {
-        MenuScreens.register(menuType, constructor::apply);
-    }
-
-    @Override
     public CreativeModeTab registerCreativeTab(ResourceLocation id, Supplier<ItemStack> icon) {
         return new CreativeModeTab(String.format("%s.%s", id.getNamespace(), id.getPath())) {
             @Override
@@ -46,6 +43,18 @@ public class ForgeAccess implements Access {
                 return icon.get();
             }
         };
+    }
+
+    @Override
+    public <M extends AbstractContainerMenu, S extends Screen & MenuAccess<M>> void registerScreen(MenuType<M> menuType, TriFunction<M, Inventory, Component, S> constructor) {
+        MenuScreens.register(menuType, constructor::apply);
+    }
+
+    @Override
+    public void setRenderLayer(RenderType renderType, Block... blocks) {
+        for (Block block: blocks) {
+            ItemBlockRenderTypes.setRenderLayer(block, renderType);
+        }
     }
 
 }

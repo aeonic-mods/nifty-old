@@ -1,11 +1,13 @@
 package design.aeonic.nifty.impl.core;
 
 import design.aeonic.nifty.api.util.Access;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -36,13 +38,18 @@ public class FabricAccess implements Access {
     }
 
     @Override
+    public CreativeModeTab registerCreativeTab(ResourceLocation id, Supplier<ItemStack> icon) {
+        return FabricItemGroupBuilder.create(id).icon(icon).build();
+    }
+
+    @Override
     public <M extends AbstractContainerMenu, S extends Screen & MenuAccess<M>> void registerScreen(MenuType<M> menuType, TriFunction<M, Inventory, Component, S> constructor) {
         MenuScreens.register(menuType, constructor::apply);
     }
 
     @Override
-    public CreativeModeTab registerCreativeTab(ResourceLocation id, Supplier<ItemStack> icon) {
-        return FabricItemGroupBuilder.create(id).icon(icon).build();
+    public void setRenderLayer(RenderType renderType, Block... blocks) {
+        BlockRenderLayerMap.INSTANCE.putBlocks(renderType, blocks);
     }
 
 }
