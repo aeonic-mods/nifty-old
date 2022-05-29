@@ -46,7 +46,6 @@ public interface Access {
      */
     <M extends AbstractContainerMenu, S extends Screen & MenuAccess<M>> void registerScreen(MenuType<M> menuType, TriFunction<M, Inventory, Component, S> constructor);
 
-
     /**
      * Sets the render layer for a given block on the client.
      */

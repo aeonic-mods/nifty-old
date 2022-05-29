@@ -130,6 +130,11 @@ public final class UiSets {
         public static final StaticUiElementTemplate RECIPE_ARROW = new StaticUiElementTemplate(TEXTURE_MAP, 23, 16, 0, 176);
 
         /**
+         * The static recipe arrow used in vanilla guis such as the anvil, flipped to face left.
+         */
+        public static final StaticUiElementTemplate RECIPE_ARROW_LEFT = new StaticUiElementTemplate(TEXTURE_MAP, 23, 16, 46, 176);
+
+        /**
          * The static recipe arrow with a red X used in vanilla guis such as the anvil.
          */
         public static final StaticUiElementTemplate RECIPE_ARROW_DISALLOWED = new StaticUiElementTemplate(TEXTURE_MAP, 23, 16, 0, 192);
