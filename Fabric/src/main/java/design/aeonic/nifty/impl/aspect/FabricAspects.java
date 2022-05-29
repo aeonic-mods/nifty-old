@@ -18,21 +18,22 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 public class FabricAspects implements Aspects {
     // TODO: Cleanup
 
-    private final Map<Class<?>, BlockApiLookup<?, Direction>> blockLookupMap = new HashMap<>();
-    private final Map<Class<?>, EntityApiLookup<?, Direction>> entityLookupMap = new HashMap<>();
-    private final Map<Class<?>, ItemApiLookup<?, Direction>> itemLookupMap = new HashMap<>();
+    private final Map<Class<?>, BlockApiLookup<?, Direction>> blockLookupMap = new ConcurrentHashMap<>();
+    private final Map<Class<?>, EntityApiLookup<?, Direction>> entityLookupMap = new ConcurrentHashMap<>();
+    private final Map<Class<?>, ItemApiLookup<?, Direction>> itemLookupMap = new ConcurrentHashMap<>();
 
     private final Multimap<Class<?>, BlockEntityAspectLookup<?>> externalBlockLookups = LinkedHashMultimap.create();
     private final Multimap<Class<?>, EntityAspectLookup<?>> externalEntityLookups = LinkedHashMultimap.create();
     private final Multimap<Class<?>, ItemStackAspectLookup<?>> externalItemLookups = LinkedHashMultimap.create();
+
+    private final Multimap<Class<?>, Runnable> aspectLookupQueue = LinkedHashMultimap.create();
 
     @Override
     public boolean exists(Class<?> aspectClass) {
@@ -44,6 +45,8 @@ public class FabricAspects implements Aspects {
         blockLookupMap.computeIfAbsent(aspectClass, clazz -> BlockApiLookup.get(id, clazz, Direction.class));
         entityLookupMap.computeIfAbsent(aspectClass, clazz -> EntityApiLookup.get(id, clazz, Direction.class));
         itemLookupMap.computeIfAbsent(aspectClass, clazz -> ItemApiLookup.get(id, clazz, Direction.class));
+        // Run the queued aspect lookup methods
+        aspectLookupQueue.removeAll(aspectClass).forEach(Runnable::run);
     }
 
     @Override
@@ -81,7 +84,8 @@ public class FabricAspects implements Aspects {
 
     // We don't need to cache these lookups, since the actual Aspect object does the caching for us if used properly
     @SuppressWarnings("unchecked")
-    public @Nullable <T> Supplier<T> queryInternal(Class<T> aspectClass, @Nullable BlockEntity be, @Nullable Direction direction) {
+    public @Nullable
+    <T> Supplier<T> queryInternal(Class<T> aspectClass, @Nullable BlockEntity be, @Nullable Direction direction) {
         BlockApiLookup<T, Direction> lookup = (BlockApiLookup<T, Direction>) blockLookupMap.get(aspectClass);
         if (lookup != null && be != null) {
             return () -> lookup.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, direction);
@@ -90,7 +94,8 @@ public class FabricAspects implements Aspects {
     }
 
     @SuppressWarnings("unchecked")
-    public @Nullable <T> Supplier<T> queryInternal(Class<T> aspectClass, Entity entity) {
+    public @Nullable
+    <T> Supplier<T> queryInternal(Class<T> aspectClass, Entity entity) {
         EntityApiLookup<T, Direction> lookup = (EntityApiLookup<T, Direction>) entityLookupMap.get(aspectClass);
         if (lookup != null) {
             return () -> lookup.find(entity, null);
@@ -99,7 +104,8 @@ public class FabricAspects implements Aspects {
     }
 
     @SuppressWarnings("unchecked")
-    public @Nullable <T> Supplier<T> queryInternal(Class<T> aspectClass, ItemStack stack) {
+    public @Nullable
+    <T> Supplier<T> queryInternal(Class<T> aspectClass, ItemStack stack) {
         ItemApiLookup<T, Direction> lookup = (ItemApiLookup<T, Direction>) itemLookupMap.get(aspectClass);
         if (lookup != null) {
             return () -> lookup.find(stack, null);
@@ -107,46 +113,67 @@ public class FabricAspects implements Aspects {
         return null;
     }
 
+    // These casts are not actually redundant, your IDE spews slander!
+
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void registerLookup(Class<T> aspectClass, BlockEntityAspectLookup<T> callback) {
-        ((BlockApiLookup<T, Direction>) blockLookupMap.get(aspectClass)).registerFallback(((world, pos, state, be, dir) -> be == null || be.isRemoved() ? null : callback.find(be, dir)));
+    public synchronized <T> void registerLookup(Class<T> aspectClass, BlockEntityAspectLookup<T> callback) {
+        if (!exists(aspectClass))
+            aspectLookupQueue.put(aspectClass, () -> registerLookup(aspectClass, callback));
+        else
+            ((BlockApiLookup<T, Direction>) blockLookupMap.get(aspectClass)).registerFallback(((world, pos, state, be, dir) -> be == null || be.isRemoved() ? null : callback.find(be, dir)));
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void registerLookup(Class<T> aspectClass, EntityAspectLookup<T> callback) {
-        ((EntityApiLookup<T, Direction>) entityLookupMap.get(aspectClass)).registerFallback((entity, $) -> entity == null || entity.isRemoved() ? null : callback.find(entity));
+    public synchronized <T> void registerLookup(Class<T> aspectClass, EntityAspectLookup<T> callback) {
+        if (!exists(aspectClass))
+            aspectLookupQueue.put(aspectClass, () -> registerLookup(aspectClass, callback));
+        else
+            ((EntityApiLookup<T, Direction>) entityLookupMap.get(aspectClass)).registerFallback((entity, $) -> entity == null || entity.isRemoved() ? null : callback.find(entity));
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void registerLookup(Class<T> aspectClass, ItemStackAspectLookup<T> callback) {
-        ((ItemApiLookup<T, Direction>) itemLookupMap.get(aspectClass)).registerFallback((stack, $) -> stack == null || stack.isEmpty() ? null : callback.find(stack));
+    public synchronized <T> void registerLookup(Class<T> aspectClass, ItemStackAspectLookup<T> callback) {
+        if (!exists(aspectClass))
+            aspectLookupQueue.put(aspectClass, () -> registerLookup(aspectClass, callback));
+        else
+            ((ItemApiLookup<T, Direction>) itemLookupMap.get(aspectClass)).registerFallback((stack, $) -> stack == null || stack.isEmpty() ? null : callback.find(stack));
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void registerNarrowLookup(Class<T> aspectClass, BlockEntityAspectLookup<T> callback, BlockEntityType<?>... blockEntityTypes) {
-        ((BlockApiLookup<T, Direction>) blockLookupMap.get(aspectClass)).registerForBlockEntities((be, dir) -> be == null || be.isRemoved() ? null : callback.find(be, dir), blockEntityTypes);
+    public synchronized <T> void registerNarrowLookup(Class<T> aspectClass, BlockEntityAspectLookup<T> callback, BlockEntityType<?>... blockEntityTypes) {
+        if (!exists(aspectClass))
+            aspectLookupQueue.put(aspectClass, () -> registerNarrowLookup(aspectClass, callback, blockEntityTypes));
+        else
+            ((BlockApiLookup<T, Direction>) blockLookupMap.get(aspectClass)).registerForBlockEntities((be, dir) -> be == null || be.isRemoved() ? null : callback.find(be, dir), blockEntityTypes);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void registerNarrowLookup(Class<T> aspectClass, EntityAspectLookup<T> callback, EntityType<?>... entityTypes) {
-        ((EntityApiLookup<T, Direction>) entityLookupMap.get(aspectClass)).registerForTypes((entity, $) -> entity == null || entity.isRemoved() ? null : callback.find(entity), entityTypes);
+    public synchronized <T> void registerNarrowLookup(Class<T> aspectClass, EntityAspectLookup<T> callback, EntityType<?>... entityTypes) {
+        if (!exists(aspectClass))
+            aspectLookupQueue.put(aspectClass, () -> registerNarrowLookup(aspectClass, callback, entityTypes));
+        else
+            ((EntityApiLookup<T, Direction>) entityLookupMap.get(aspectClass)).registerForTypes((entity, $) -> entity == null || entity.isRemoved() ? null : callback.find(entity), entityTypes);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void registerNarrowLookup(Class<T> aspectClass, ItemStackAspectLookup<T> callback, ItemLike... items) {
-        ((ItemApiLookup<T, Direction>) itemLookupMap.get(aspectClass)).registerForItems((stack, $) -> stack == null || stack.isEmpty() ? null : callback.find(stack), items);
+    public synchronized <T> void registerNarrowLookup(Class<T> aspectClass, ItemStackAspectLookup<T> callback, ItemLike... items) {
+        if (!exists(aspectClass))
+            aspectLookupQueue.put(aspectClass, () -> registerNarrowLookup(aspectClass, callback, items));
+        else
+            ((ItemApiLookup<T, Direction>) itemLookupMap.get(aspectClass)).registerForItems((stack, $) -> stack == null || stack.isEmpty() ? null : callback.find(stack), items);
     }
 
     @SuppressWarnings("unchecked")
-    public @Nullable <T> Supplier<T> queryExternal(Class<T> aspectClass, BlockEntity be, Direction direction) {
+    public @Nullable
+    <T> Supplier<T> queryExternal(Class<T> aspectClass, BlockEntity be, Direction direction) {
         Collection<BlockEntityAspectLookup<?>> lookups = externalBlockLookups.get(aspectClass);
-        for (BlockEntityAspectLookup<?> lookup: lookups) {
+        for (BlockEntityAspectLookup<?> lookup : lookups) {
             T t = ((BlockEntityAspectLookup<T>) lookup).find(be, direction);
             if (t != null) return () -> ((BlockEntityAspectLookup<T>) lookup).find(be, direction);
         }
@@ -154,9 +181,10 @@ public class FabricAspects implements Aspects {
     }
 
     @SuppressWarnings("unchecked")
-    public @Nullable <T> Supplier<T> queryExternal(Class<T> aspectClass, Entity entity) {
+    public @Nullable
+    <T> Supplier<T> queryExternal(Class<T> aspectClass, Entity entity) {
         Collection<EntityAspectLookup<?>> lookups = externalEntityLookups.get(aspectClass);
-        for (EntityAspectLookup<?> lookup: lookups) {
+        for (EntityAspectLookup<?> lookup : lookups) {
             T t = ((EntityAspectLookup<T>) lookup).find(entity);
             if (t != null) return () -> ((EntityAspectLookup<T>) lookup).find(entity);
         }
@@ -164,24 +192,25 @@ public class FabricAspects implements Aspects {
     }
 
     @SuppressWarnings("unchecked")
-    public @Nullable <T> Supplier<T> queryExternal(Class<T> aspectClass, ItemStack stack) {
+    public @Nullable
+    <T> Supplier<T> queryExternal(Class<T> aspectClass, ItemStack stack) {
         Collection<ItemStackAspectLookup<?>> lookups = externalItemLookups.get(aspectClass);
-        for (ItemStackAspectLookup<?> lookup: lookups) {
+        for (ItemStackAspectLookup<?> lookup : lookups) {
             T t = ((ItemStackAspectLookup<T>) lookup).find(stack);
             if (t != null) return () -> ((ItemStackAspectLookup<T>) lookup).find(stack);
         }
         return null;
     }
 
-    public <T> void registerExternalLookup(Class<T> aspectClass, BlockEntityAspectLookup<T> callback) {
+    public synchronized <T> void registerExternalLookup(Class<T> aspectClass, BlockEntityAspectLookup<T> callback) {
         externalBlockLookups.put(aspectClass, callback);
     }
 
-    public <T> void registerExternalLookup(Class<T> aspectClass, EntityAspectLookup<T> callback) {
+    public synchronized <T> void registerExternalLookup(Class<T> aspectClass, EntityAspectLookup<T> callback) {
         externalEntityLookups.put(aspectClass, callback);
     }
 
-    public <T> void registerExternalLookup(Class<T> aspectClass, ItemStackAspectLookup<T> callback) {
+    public synchronized <T> void registerExternalLookup(Class<T> aspectClass, ItemStackAspectLookup<T> callback) {
         externalItemLookups.put(aspectClass, callback);
     }
 
