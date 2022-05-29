@@ -34,6 +34,8 @@ public class TankUiElementTemplate extends FillingUiElementTemplate<AbstractTank
 
     @Override
     protected void drawFill(PoseStack stack, int x, int y, int zOffset, AbstractTank tank) {
+        if (tank.get().isEmpty()) return;
+
         // Fluid setup
         var fluidInfo = Nifty.RENDER_HELPER.getFluidSpriteAndColor(tank.get().getFluid().defaultFluidState());
         TextureAtlasSprite sprite = fluidInfo.getLeft();
