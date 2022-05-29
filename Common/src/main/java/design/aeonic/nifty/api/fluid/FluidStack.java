@@ -92,7 +92,7 @@ public class FluidStack {
     }
 
     public boolean is(Fluid fluid) {
-        return fluid.isSame(fluid);
+        return this.fluid.isSame(fluid);
     }
 
     public boolean canStack(FluidStack other) {
@@ -169,26 +169,8 @@ public class FluidStack {
         List<Component> tooltip = new ArrayList<>();
 
         ResourceLocation key = Registry.FLUID.getKey(fluid);
-        CompoundTag compoundtag = tag.getCompound("display");
-        if (compoundtag.contains("Name", 8)) {
-            try {
-                Component component = Component.Serializer.fromJson(compoundtag.getString("Name"));
-                if (component != null) {
-                    tooltip.add(component);
-                }
-
-                compoundtag.remove("Name");
-            } catch (Exception exception) {
-                compoundtag.remove("Name");
-                tooltip.add(new TextComponent(StringUtils.capitalize(key.getPath())));
-            }
-        }
-        else {
-            tooltip.add(new TextComponent(StringUtils.capitalize(key.getPath())));
-        }
-
+        tooltip.add(new TextComponent(StringUtils.capitalize(key.getPath())));
         tooltip.add(new TextComponent(DecimalFormat.getIntegerInstance().format(amount) + " mb").withStyle(ChatFormatting.GRAY));
-
         // TODO: Add bucket item tooltips? Somewhere to register extra tooltip info?
         tooltip.add(new TextComponent(Nifty.PLATFORM.getModDisplayName(key.getNamespace()).orElse("Minecraft")).withStyle(ChatFormatting.ITALIC, ChatFormatting.BLUE));
         return tooltip;
