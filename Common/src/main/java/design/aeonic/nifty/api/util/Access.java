@@ -3,6 +3,9 @@ package design.aeonic.nifty.api.util;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -18,6 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -36,19 +40,22 @@ public interface Access {
      * Creates a menu type.
      */
     <T extends AbstractContainerMenu> MenuType<T> menuType(BiFunction<Integer, Inventory, T> constructor);
+
     /**
      * Creates and registers a new creative mode tab.
      */
     CreativeModeTab registerCreativeTab(ResourceLocation id, Supplier<ItemStack> icon);
 
     /**
+     * Sets the render layer for a given block on the client.
+     */
+    void setRenderLayer(RenderType renderType, Block... blocks);
+
+    /**
      * Registers a screen on the client.
      */
     <M extends AbstractContainerMenu, S extends Screen & MenuAccess<M>> void registerScreen(MenuType<M> menuType, TriFunction<M, Inventory, Component, S> constructor);
 
-    /**
-     * Sets the render layer for a given block on the client.
-     */
-    void setRenderLayer(RenderType renderType, Block... blocks);
+    <T extends BlockEntity> void registerBlockEntityRenderer(BlockEntityType<? extends T> type, BlockEntityRendererProvider<T> provider);
 
 }

@@ -6,6 +6,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -36,6 +38,13 @@ public class ForgeAccess implements Access {
     }
 
     @Override
+    public void setRenderLayer(RenderType renderType, Block... blocks) {
+        for (Block block: blocks) {
+            ItemBlockRenderTypes.setRenderLayer(block, renderType);
+        }
+    }
+
+    @Override
     public CreativeModeTab registerCreativeTab(ResourceLocation id, Supplier<ItemStack> icon) {
         return new CreativeModeTab(String.format("%s.%s", id.getNamespace(), id.getPath())) {
             @Override
@@ -51,10 +60,8 @@ public class ForgeAccess implements Access {
     }
 
     @Override
-    public void setRenderLayer(RenderType renderType, Block... blocks) {
-        for (Block block: blocks) {
-            ItemBlockRenderTypes.setRenderLayer(block, renderType);
-        }
+    public <T extends BlockEntity> void registerBlockEntityRenderer(BlockEntityType<? extends T> type, BlockEntityRendererProvider<T> provider) {
+        BlockEntityRenderers.register(type, provider);
     }
 
 }
