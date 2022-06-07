@@ -5,6 +5,9 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.fabricmc.fabric.api.registry.FuelRegistry;
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
@@ -13,6 +16,11 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -24,10 +32,29 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.apache.commons.lang3.function.TriFunction;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 public class FabricAccess implements Access {
+
+    @Override
+    public void registerReloadListener(PackType type, ResourceLocation id, PreparableReloadListener listener) {
+        ResourceManagerHelper.get(type).registerReloadListener(new ReloadListenerWrapper(id, listener));
+    }
+
+    record ReloadListenerWrapper(ResourceLocation id, PreparableReloadListener parent) implements IdentifiableResourceReloadListener {
+        @Override
+        public ResourceLocation getFabricId() {
+            return id;
+        }
+
+        @Override
+        public CompletableFuture<Void> reload(PreparationBarrier preparationBarrier, ResourceManager resourceManager, ProfilerFiller profilerFiller, ProfilerFiller profilerFiller2, Executor executor, Executor executor2) {
+            return parent.reload(preparationBarrier, resourceManager, profilerFiller, profilerFiller2, executor, executor2);
+        }
+    }
 
     @Override
     public <T extends BlockEntity> BlockEntityType<T> blockEntityType(BiFunction<BlockPos, BlockState, T> constructor, Block... validBlocks) {
@@ -40,13 +67,18 @@ public class FabricAccess implements Access {
     }
 
     @Override
-    public void setRenderLayer(RenderType renderType, Block... blocks) {
-        BlockRenderLayerMap.INSTANCE.putBlocks(renderType, blocks);
+    public CreativeModeTab registerCreativeTab(ResourceLocation id, Supplier<ItemStack> icon) {
+        return FabricItemGroupBuilder.create(id).icon(icon).build();
     }
 
     @Override
-    public CreativeModeTab registerCreativeTab(ResourceLocation id, Supplier<ItemStack> icon) {
-        return FabricItemGroupBuilder.create(id).icon(icon).build();
+    public int getBurnTime(ItemStack stack) {
+        return FuelRegistry.INSTANCE.get(stack.getItem());
+    }
+
+    @Override
+    public void setRenderLayer(RenderType renderType, Block... blocks) {
+        BlockRenderLayerMap.INSTANCE.putBlocks(renderType, blocks);
     }
 
     @Override

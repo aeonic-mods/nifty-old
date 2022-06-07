@@ -9,6 +9,8 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -32,6 +34,11 @@ import java.util.function.Supplier;
 public interface Access {
 
     /**
+     * Registers a reload listener for the given pack type. Should be called in init.
+     */
+    void registerReloadListener(PackType type, ResourceLocation id, PreparableReloadListener listener);
+
+    /**
      * Creates a block entity type.
      */
     <T extends BlockEntity> BlockEntityType<T> blockEntityType(BiFunction<BlockPos, BlockState, T> constructor, Block... validBlocks);
@@ -45,6 +52,11 @@ public interface Access {
      * Creates and registers a new creative mode tab.
      */
     CreativeModeTab registerCreativeTab(ResourceLocation id, Supplier<ItemStack> icon);
+
+    /**
+     * Gets the burn time of an item stack in ticks.
+     */
+    int getBurnTime(ItemStack stack);
 
     /**
      * Sets the render layer for a given block on the client.
