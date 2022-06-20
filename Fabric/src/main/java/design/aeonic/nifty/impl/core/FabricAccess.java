@@ -26,7 +26,9 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -73,7 +75,9 @@ public class FabricAccess implements Access {
 
     @Override
     public int getBurnTime(ItemStack stack) {
-        return FuelRegistry.INSTANCE.get(stack.getItem());
+        Integer burnTime = AbstractFurnaceBlockEntity.getFuel().get(stack.getItem());
+        if (burnTime == null) burnTime = FuelRegistry.INSTANCE.get(stack.getItem());
+        return burnTime == null ? 0 : burnTime;
     }
 
     @Override
