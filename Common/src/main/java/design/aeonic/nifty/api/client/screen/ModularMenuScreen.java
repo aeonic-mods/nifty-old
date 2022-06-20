@@ -63,13 +63,16 @@ public class ModularMenuScreen<M extends AbstractContainerMenu> extends Abstract
     @Override
     public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTick) {
         super.render(stack, mouseX, mouseY, partialTick);
+        renderTooltip(stack, mouseX, mouseY);
+    }
 
-        // Render element tooltips
+    @Override
+    protected void renderTooltip(PoseStack stack, int mouseX, int mouseY) {
+        super.renderTooltip(stack, mouseX, mouseY);
         for (UiElement<?> element: uiElements) {
             if (element.template().hasTooltip() && element.isWithin(mouseX, mouseY)) {
                 renderComponentTooltip(stack, element.getTooltip(), mouseX, mouseY);
             }
         }
     }
-
 }
