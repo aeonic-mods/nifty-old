@@ -1,5 +1,7 @@
 package design.aeonic.nifty.api.item;
 
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -125,4 +127,24 @@ public abstract class AbstractSlot {
     public void set(ItemStack stack) {
         containedStack = stack;
     }
+
+    Slot asContainerSlot(Container container, int index, int x, int y) {
+        return new ContainerSlot(this, container, index, x, y);
+    }
+
+    static class ContainerSlot extends Slot {
+
+        private final AbstractSlot parent;
+
+        public ContainerSlot(AbstractSlot parent, Container container, int index, int x, int y) {
+            super(container, index, x, y);
+            this.parent = parent;
+        }
+
+        @Override
+        public boolean mayPlace(ItemStack stack) {
+            return parent.allowedInSlot(stack);
+        }
+    }
+
 }

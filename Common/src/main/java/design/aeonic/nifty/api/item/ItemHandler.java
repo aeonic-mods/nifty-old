@@ -105,4 +105,12 @@ public interface ItemHandler {
      */
     void fromNetwork(FriendlyByteBuf buf);
 
+    /**
+     * Returns a Container wrapping this ItemHandler. Can only be used for internal item handlers; that is, those
+     * you've created yourself and not any obtained via the Aspect system.
+     */
+    default ItemHandlerContainer asContainer() {
+        return new ItemHandlerContainer(this);
+    }
+
 }
