@@ -62,6 +62,9 @@ public abstract class DataField<T> {
      * @param segment the index of the data slot, must be less than {@link #slots()}
      */
     public void write(int segment, short data) {
+        if (getter != null) {
+            shortCache = encode(getter.get());
+        }
         shortCache[segment] = data;
     }
 

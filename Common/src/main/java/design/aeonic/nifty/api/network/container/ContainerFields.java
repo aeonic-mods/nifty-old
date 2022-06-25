@@ -27,7 +27,7 @@ public class ContainerFields implements ContainerData {
         assert slot < count;
         int i = 0;
         for (DataField<?> field: fields) {
-            if (i <= slot && i + field.slots() >= slot) {
+            if (i <= slot && i + field.slots() > slot) {
                 return field.read(slot - i);
             }
             i += field.slots();
@@ -40,7 +40,7 @@ public class ContainerFields implements ContainerData {
         assert slot < count;
         int i = 0;
         for (DataField<?> field: fields) {
-            if (i <= slot && i + field.slots() >= slot) {
+            if (i <= slot && i + field.slots() > slot) {
                 field.write(slot - i, (short) value);
                 return;
             }
