@@ -3,6 +3,7 @@ package design.aeonic.nifty.impl.aspect;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import design.aeonic.nifty.api.aspect.Aspect;
+import design.aeonic.nifty.api.aspect.AspectProvider;
 import design.aeonic.nifty.api.aspect.Aspects;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.fabricmc.fabric.api.lookup.v1.entity.EntityApiLookup;
@@ -52,10 +53,16 @@ public class FabricAspects implements Aspects {
     @Override
     public <T> Aspect<T> query(Class<T> aspectClass, @Nullable BlockEntity be, @Nullable Direction direction) {
         Supplier<T> internal = queryInternal(aspectClass, be, direction);
-        if (internal != null) return Aspect.of(internal);
+        if (internal != null) {
+            Aspect<T> aspect = Aspect.of(internal);
+            AspectProvider.cast(be).addRefreshCallback(aspect::refresh);
+        }
 
         Supplier<T> ext = queryExternal(aspectClass, be, direction);
-        if (ext != null) return Aspect.of(ext);
+        if (ext != null) {
+            Aspect<T> aspect = Aspect.of(ext);
+            AspectProvider.cast(be).addRefreshCallback(aspect::refresh);
+        }
 
         return Aspect.empty();
     }
