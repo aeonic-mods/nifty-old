@@ -44,10 +44,13 @@ public class ModularMenuScreen<M extends AbstractContainerMenu> extends Abstract
         uiElements.add(uiElement);
     }
 
+    public void setBackground(UiElementTemplate<Void> background) {
+        this.background = background.make(() -> null, leftPos, topPos, getBlitOffset());
+    }
+
     public void setBackground(UiElement<Void> background) {
         this.background = background;
     }
-
 
     @Override
     protected void renderBg(@Nonnull PoseStack stack, float partialTick, int mouseX, int mouseY) {
