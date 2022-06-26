@@ -83,6 +83,13 @@ public interface Aspect<T> {
     }
 
     /**
+     * Identical to {@link #ifPresent(Function)}, but without the return value.
+     */
+    default void ifPresent(Consumer<T> consumer) {
+        resolve().ifPresent(consumer);
+    }
+
+    /**
      * Identical to {@link #ifPresent(BiFunction)}, but without the Aspect parameter.
      */
     default @Nullable
