@@ -54,14 +54,16 @@ public class FabricAspects implements Aspects {
     public <T> Aspect<T> query(Class<T> aspectClass, @Nullable BlockEntity be, @Nullable Direction direction) {
         Supplier<T> internal = queryInternal(aspectClass, be, direction);
         if (internal != null) {
-            Aspect<T> aspect = Aspect.of(internal);
+            Aspect<T> aspect = Aspect.of(() -> be != null && be.isRemoved() ? null : internal.get());
             AspectProvider.cast(be).addRefreshCallback(aspect::refresh);
+            return aspect;
         }
 
         Supplier<T> ext = queryExternal(aspectClass, be, direction);
         if (ext != null) {
-            Aspect<T> aspect = Aspect.of(ext);
+            Aspect<T> aspect = Aspect.of(() -> be != null && be.isRemoved() ? null : ext.get());
             AspectProvider.cast(be).addRefreshCallback(aspect::refresh);
+            return aspect;
         }
 
         return Aspect.empty();
@@ -70,10 +72,18 @@ public class FabricAspects implements Aspects {
     @Override
     public <T> Aspect<T> query(Class<T> aspectClass, Entity entity) {
         Supplier<T> internal = queryInternal(aspectClass, entity);
-        if (internal != null) return Aspect.of(internal);
+        if (internal != null) {
+            Aspect<T> aspect = Aspect.of(() -> entity.isRemoved() ? null : internal.get());
+            AspectProvider.cast(entity).addRefreshCallback(aspect::refresh);
+            return aspect;
+        }
 
         Supplier<T> ext = queryExternal(aspectClass, entity);
-        if (ext != null) return Aspect.of(ext);
+        if (ext != null) {
+            Aspect<T> aspect = Aspect.of(() -> entity.isRemoved() ? null : ext.get());
+            AspectProvider.cast(entity).addRefreshCallback(aspect::refresh);
+            return aspect;
+        }
 
         return Aspect.empty();
     }
@@ -81,10 +91,18 @@ public class FabricAspects implements Aspects {
     @Override
     public <T> Aspect<T> query(Class<T> aspectClass, ItemStack stack) {
         Supplier<T> internal = queryInternal(aspectClass, stack);
-        if (internal != null) return Aspect.of(internal);
+        if (internal != null) {
+            Aspect<T> aspect = Aspect.of(internal);
+            AspectProvider.cast(stack).addRefreshCallback(aspect::refresh);
+            return aspect;
+        }
 
         Supplier<T> ext = queryExternal(aspectClass, stack);
-        if (ext != null) return Aspect.of(ext);
+        if (ext != null) {
+            Aspect<T> aspect = Aspect.of(ext);
+            AspectProvider.cast(stack).addRefreshCallback(aspect::refresh);
+            return aspect;
+        }
 
         return Aspect.empty();
     }

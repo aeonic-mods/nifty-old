@@ -160,7 +160,7 @@ public class ForgeAspects implements Aspects {
         if (be == null) return Aspect.empty();
         Supplier<T> supplier = queryInternal(aspectClass, be, direction);
         if (supplier != null) {
-            Aspect<T> aspect = Aspect.of(supplier);
+            Aspect<T> aspect = Aspect.of(() -> be.isRemoved() ? null : supplier.get());
             AspectProvider.cast(be).addRefreshCallback(aspect::refresh);
             return aspect;
         }
@@ -178,7 +178,7 @@ public class ForgeAspects implements Aspects {
         if (entity == null) return Aspect.empty();
         Supplier<T> supplier = queryInternal(aspectClass, entity);
         if (supplier != null) {
-            Aspect<T> aspect = Aspect.of(supplier);
+            Aspect<T> aspect = Aspect.of(() -> entity.isRemoved() ? null : supplier.get());
             AspectProvider.cast(entity).addRefreshCallback(aspect::refresh);
             return aspect;
         }
