@@ -35,7 +35,7 @@ public interface Aspects {
      * The returned Aspect is safe to store (and in fact should be stored to avoid extra queries) as a cache for the
      * object you're trying to obtain. Whenever it becomes unavailable or changes, the Aspect object will refresh its
      * contained value and {@link Aspect#resolve()} will return the new object (or an empty Optional if it is no longer available).<br><br>
-     * Thus, you should always keep any usage of returned aspects within a call to {@link Aspect#ifPresent} or similar.
+     * Thus, you should always keep any usage of returned aspects within a call to {@link Aspect#ifPresentMap} or similar.
      *
      * @param aspectClass the base class of the Aspect (the one passed to {@link #registerAspect}
      * @param be          the block entity
@@ -49,7 +49,7 @@ public interface Aspects {
      * The returned Aspect is safe to store (and in fact should be stored to avoid extra queries) as a cache for the
      * object you're trying to obtain. Whenever it becomes unavailable or changes, the Aspect object will refresh its
      * contained value and {@link Aspect#resolve()} will return the new object (or an empty Optional if it is no longer available).<br><br>
-     * Thus, you should always keep any usage of returned aspects within a call to {@link Aspect#ifPresent} or similar.
+     * Thus, you should always keep any usage of returned aspects within a call to {@link Aspect#ifPresentMap} or similar.
      *
      * @param aspectClass the base class of the Aspect (the one passed to {@link #registerAspect}
      * @param entity      the entity
@@ -62,7 +62,7 @@ public interface Aspects {
      * The returned Aspect is safe to store (and in fact should be stored to avoid extra queries) as a cache for the
      * object you're trying to obtain. Whenever it becomes unavailable or changes, the Aspect object will refresh its
      * contained value and {@link Aspect#resolve()} will return the new object (or an empty Optional if it is no longer available).<br><br>
-     * Thus, you should always keep any usage of returned aspects within a call to {@link Aspect#ifPresent} or similar.
+     * Thus, you should always keep any usage of returned aspects within a call to {@link Aspect#ifPresentMap} or similar.
      *
      * @param aspectClass the base class of the Aspect (the one passed to {@link #registerAspect}
      * @param stack       the item stack

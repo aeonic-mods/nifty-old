@@ -2,6 +2,7 @@ package design.aeonic.nifty.api.aspect;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -83,18 +84,25 @@ public interface Aspect<T> {
     }
 
     /**
-     * Identical to {@link #ifPresent(Function)}, but without the return value.
+     * Identical to {@link #ifPresentMap(Function)}, but without the return value.
      */
     default void ifPresent(Consumer<T> consumer) {
         resolve().ifPresent(consumer);
     }
 
     /**
-     * Identical to {@link #ifPresent(BiFunction)}, but without the Aspect parameter.
+     * Identical to {@link #ifPresentMap(BiFunction)}, but without the Aspect parameter.
      */
     default @Nullable
-    <R> R ifPresent(Function<T, R> function) {
-        return ifPresent((aspect, t) -> function.apply(t));
+    <R> R ifPresentMap(Function<T, R> function) {
+        return ifPresentMap((aspect, t) -> function.apply(t));
+    }
+
+    /**
+     * Identical to {@link #ifPresentMap(BiFunction)}, but without the return value.
+     */
+    default void ifPresent(BiConsumer<Aspect<T>, T> consumer) {
+        resolve().ifPresent(s -> consumer.accept(this, s));
     }
 
     /**
@@ -103,14 +111,14 @@ public interface Aspect<T> {
      * store it etc.<br><br>
      */
     default @Nullable
-    <R> R ifPresent(BiFunction<Aspect<T>, T, R> function) {
+    <R> R ifPresentMap(BiFunction<Aspect<T>, T, R> function) {
         if (resolve().isPresent())
             return function.apply(this, resolve().get());
         return null;
     }
 
     /**
-     * Simple Aspect implementation for providers exposing Aspects.<br><br>
+     * Simple Aspect implementation for providers exposing Aspects.
      */
     class SimpleAspect<T> implements Aspect<T> {
 
