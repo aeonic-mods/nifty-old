@@ -33,21 +33,25 @@ Nifty is a cross-platform library mod that serves as a basis for tech mods targe
     * Fluid handlers, same as above
     * Energy handlers, same as above + compat for Reborn Team's Energy API on Fabric
 * Modular UI system
-* [UiElementTemplates](Common/src/main/java/design/aeonic/nifty/api/client/ui/UiElementTemplate.java), which can be used to make a UiElement instance for a given Screen (or other rendering scenario)
-  * A few default templates classes
-    * [StaticUiElementTemplate](Common/src/main/java/design/aeonic/nifty/api/client/ui/template/StaticUiElementTemplate.java) - for boring, static UI elements
-    * [FillingUiElementTemplate](Common/src/main/java/design/aeonic/nifty/api/client/ui/template/FillingUiElementTemplate.java) - for UI elements that draw differently with a given fill progress, such as vanilla furnace recipe arrows and burn time indicators
-    * [TankUiElementTemplate](Common/src/main/java/design/aeonic/nifty/api/client/ui/template/TankUiElementTemplate.java) - for tanks that render with a fluid fill based on the AbstractTankSlot they're passed at render-time
-  * A [default UI set](Common/src/main/java/design/aeonic/nifty/api/client/ui/UiSets.java) with vanilla ui assets and vanilla-style extras, such as fluid tanks and energy meters of various sizes
-  * A bit messy, may revisit in the future
+  * [UiElementTemplates](Common/src/main/java/design/aeonic/nifty/api/client/ui/UiElementTemplate.java), which can be used to make a UiElement instance for a given Screen (or other rendering scenario)
+    * A few default template classes
+      * [StaticUiElementTemplate](Common/src/main/java/design/aeonic/nifty/api/client/ui/template/StaticUiElementTemplate.java) - for boring, static UI elements
+      * [FillingUiElementTemplate](Common/src/main/java/design/aeonic/nifty/api/client/ui/template/FillingUiElementTemplate.java) - for UI elements that draw differently with a given fill progress, such as vanilla furnace recipe arrows and burn time indicators
+      * [TankUiElementTemplate](Common/src/main/java/design/aeonic/nifty/api/client/ui/template/TankUiElementTemplate.java) - for tanks that render with a fluid fill based on the AbstractTankSlot they're passed at render-time
+    * A [default UI set](Common/src/main/java/design/aeonic/nifty/api/client/ui/UiSets.java) with vanilla ui assets and vanilla-style extras, such as fluid tanks and energy meters of various sizes
+    * A bit messy, may revisit in the future
+  * [ModularMenuScreen](Common/src/main/java/design/aeonic/nifty/api/client/screen/ModularMenuScreen.java)
+    * Renders UI elements added to the base list
+    * Renders tooltips as defined by the UI elements
+      * Default tooltips for fluid and energy handler UI elements
 
 ### Planned
 
 * More UI stuff
-  * A simple screen that renders elements and their tooltips from a list
   * Extra templates
     * Energy usage over time graph like Satisfactory's would be very cool
-    * Correct itemstack placement for offset slots suchas the vanilla set's output slot
+    * Correct itemstack placement for offset slots such as the vanilla set's output slot
+  * Somehow integrate slots with menu container slots - perhaps defined via index and then placed correctly for the slot
 * Tentatively, multiblocks
 * Rendering hooks
     * Holograms
@@ -60,6 +64,3 @@ Nifty is a cross-platform library mod that serves as a basis for tech mods targe
     * Simplified implementation as compared to Forge's configs
 * Abstracted networking
 * Abstracted tags deferring to platform tags
-* Abstracted data loading and data-driven "things"
-    * Probably just some kind of interface that allows you to define like... anything to load from data
-    * Should be easy enough with codecs
