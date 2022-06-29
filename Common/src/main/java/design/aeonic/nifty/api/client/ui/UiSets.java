@@ -136,15 +136,21 @@ public final class UiSets {
         public static final StaticUiElementTemplate RECIPE_ARROW_LEFT = new StaticUiElementTemplate(TEXTURE_MAP, 23, 16, 46, 176);
 
         /**
-         * A togglable recipe arrow that displays a red X when the boolean context is true, similar to the anvil's.
+         * The static recipe arrow with a red X used in vanilla guis such as the anvil.
          */
-        public static final BooleanUiElementTemplate TOGGLABLE_RECIPE_ARROW = new BooleanUiElementTemplate(TEXTURE_MAP, 23, 16, 0, 176, 0, 192);
+        public static final StaticUiElementTemplate RECIPE_ARROW_DISALLOWED = new StaticUiElementTemplate(TEXTURE_MAP, 23, 16, 0, 192);
 
         /**
          * The recipe arrow used in vanilla furnaces, filling from left to right.
          */
         public static final FillingUiElementTemplate<FillingUiElementTemplate.FillLevel> RECIPE_ARROW_FILLING = new FillingUiElementTemplate<>(TEXTURE_MAP,
                 23, 16, 0, 176, 23, 176, FillingUiElementTemplate.FillDirection.LEFT_TO_RIGHT);
+
+        /**
+         * A togglable recipe arrow that displays a red X when the boolean context is false (similar to the anvil's) and otherwise draws based on the passed fill level
+         */
+        public static final BooleanUiElementTemplate<FillingUiElementTemplate.FillLevel, Void> RECIPE_ARROW_FILLING_TOGGLABLE = new BooleanUiElementTemplate<>(
+                RECIPE_ARROW_FILLING, RECIPE_ARROW_DISALLOWED);
 
         /**
          * The burn time indicator used in vanilla furnaces.

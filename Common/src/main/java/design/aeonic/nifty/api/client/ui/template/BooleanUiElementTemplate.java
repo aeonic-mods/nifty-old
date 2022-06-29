@@ -1,58 +1,73 @@
 package design.aeonic.nifty.api.client.ui.template;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import design.aeonic.nifty.api.client.ui.Texture;
 import design.aeonic.nifty.api.client.ui.UiElementTemplate;
-import net.minecraft.client.gui.screens.Screen;
+
+import java.util.function.Supplier;
 
 /**
  * A simple static UI element.
  */
-public class BooleanUiElementTemplate implements UiElementTemplate<Boolean> {
+public class BooleanUiElementTemplate<A, B> implements UiElementTemplate<BooleanUiElementTemplate.Context<A, B>> {
 
-    protected final Texture texture;
-    protected final int width;
-    protected final int height;
-    protected final int u;
-    protected final int v;
-    protected final int enabledU;
-    protected final int enabledV;
+    protected final UiElementTemplate<A> first;
+    protected final UiElementTemplate<B> second;
 
     /**
-     * @param texture  the texture map to draw from
-     * @param width    the element's width
-     * @param height   the element's height
-     * @param u        the element's x offset in the texture map when the passed boolean is false
-     * @param v        the element's y offset in the texture map when the passed boolean is false
-     * @param enabledU the element's x offset in the texture map when the passed boolean is true
-     * @param enabledV the element's y offset in the texture map when the passed boolean is true
+     * A boolean UI element template that can switch between two other elements based on a context boolean.
+     * Both elements should have the same dimensions.
+     *
+     * @param first  the template to draw if the context boolean is true
+     * @param second the template to draw if the context boolean is false
      */
-    public BooleanUiElementTemplate(Texture texture, int width, int height, int u, int v, int enabledU, int enabledV) {
-        this.texture = texture;
-        this.width = width;
-        this.height = height;
-        this.u = u;
-        this.v = v;
-        this.enabledU = enabledU;
-        this.enabledV = enabledV;
+    public BooleanUiElementTemplate(UiElementTemplate<A> first, UiElementTemplate<B> second) {
+        this.first = first;
+        this.second = second;
     }
 
     @Override
     public int getWidth() {
-        return width;
+        return first.getWidth();
     }
 
     @Override
     public int getHeight() {
-        return height;
+        return first.getWidth();
     }
 
     @Override
-    public void draw(PoseStack stack, int x, int y, int zOffset, Boolean bool) {
-        RenderSystem.setShaderColor(1, 1, 1, 1);
-        texture.setup();
-        Screen.blit(stack, x, y, zOffset, u, v, width, height, texture.width(), texture.height());
+    public void draw(PoseStack stack, int x, int y, int zOffset, Context<A, B> ctx) {
+        if (ctx.useFirst()) first.draw(stack, x, y, zOffset, ctx.getFirst());
+        else second.draw(stack, x, y, zOffset, ctx.getSecond());
+    }
+
+    public interface Context<A, B> {
+
+        boolean useFirst();
+
+        A getFirst();
+
+        B getSecond();
+
+    }
+
+    public record SimpleContext<A, B>(Supplier<Boolean> enabled, Supplier<A> first, Supplier<B> second) implements Context<A, B> {
+
+        @Override
+        public boolean useFirst() {
+            return enabled.get();
+        }
+
+        @Override
+        public A getFirst() {
+            return first.get();
+        }
+
+        @Override
+        public B getSecond() {
+            return second.get();
+        }
+
     }
 
 }
