@@ -50,8 +50,8 @@ public class ModularMenuScreen<M extends AbstractContainerMenu> extends Abstract
      * @param x        the element's x position relative to the screen
      * @param y        the element's y position relative to the screen
      */
-    public <C> void addUiElement(UiElementTemplate<C> template, Supplier<C> context, int x, int y) {
-        addUiElement(template.make(context, x + leftPos, y + topPos, getBlitOffset()));
+    public <C> UiElement<C> addUiElement(UiElementTemplate<C> template, Supplier<C> context, int x, int y) {
+        return addUiElement(template.make(context, x + leftPos, y + topPos, getBlitOffset()));
     }
 
     /**
@@ -60,8 +60,9 @@ public class ModularMenuScreen<M extends AbstractContainerMenu> extends Abstract
      *
      * @param uiElement the element to add
      */
-    public <C> void addUiElement(UiElement<C> uiElement) {
+    public <C> UiElement<C> addUiElement(UiElement<C> uiElement) {
         uiElements.add(uiElement);
+        return uiElement;
     }
 
     public void setBackground(UiElementTemplate<Void> background) {
@@ -93,9 +94,10 @@ public class ModularMenuScreen<M extends AbstractContainerMenu> extends Abstract
     protected void renderTooltip(PoseStack stack, int mouseX, int mouseY) {
         super.renderTooltip(stack, mouseX, mouseY);
         for (UiElement<?> element : uiElements) {
-            if (element.template().hasTooltip() && element.isWithin(mouseX, mouseY)) {
+            if (!element.getTooltip().isEmpty() && element.isWithin(mouseX, mouseY)) {
                 renderComponentTooltip(stack, element.getTooltip(), mouseX, mouseY);
             }
         }
     }
+
 }
