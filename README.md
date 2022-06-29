@@ -44,6 +44,7 @@ Nifty is a cross-platform library mod that serves as a basis for tech mods targe
     * Renders UI elements added to the base list
     * Renders tooltips as defined by the UI elements
       * Default tooltips for fluid and energy handler UI elements
+    * Integrated item slot ui elements with menu slots
 
 ### Planned
 
@@ -51,7 +52,6 @@ Nifty is a cross-platform library mod that serves as a basis for tech mods targe
   * Extra templates
     * Energy usage over time graph like Satisfactory's would be very cool
     * Correct itemstack placement for offset slots such as the vanilla set's output slot
-  * Somehow integrate slots with menu container slots - perhaps defined via index and then placed correctly for the slot
 * Tentatively, multiblocks
 * Rendering hooks
     * Holograms
