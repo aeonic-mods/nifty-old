@@ -1,5 +1,6 @@
 package design.aeonic.nifty.api.client.ui;
 
+import design.aeonic.nifty.api.client.ui.template.BooleanUiElementTemplate;
 import design.aeonic.nifty.api.client.ui.template.EnergyUiElementTemplate;
 import design.aeonic.nifty.api.client.ui.template.FillingUiElementTemplate;
 import design.aeonic.nifty.api.client.ui.template.StaticUiElementTemplate;
@@ -135,9 +136,9 @@ public final class UiSets {
         public static final StaticUiElementTemplate RECIPE_ARROW_LEFT = new StaticUiElementTemplate(TEXTURE_MAP, 23, 16, 46, 176);
 
         /**
-         * The static recipe arrow with a red X used in vanilla guis such as the anvil.
+         * A togglable recipe arrow that displays a red X when the boolean context is true, similar to the anvil's.
          */
-        public static final StaticUiElementTemplate RECIPE_ARROW_DISALLOWED = new StaticUiElementTemplate(TEXTURE_MAP, 23, 16, 0, 192);
+        public static final BooleanUiElementTemplate TOGGLABLE_RECIPE_ARROW = new BooleanUiElementTemplate(TEXTURE_MAP, 23, 16, 0, 176, 0, 192);
 
         /**
          * The recipe arrow used in vanilla furnaces, filling from left to right.
