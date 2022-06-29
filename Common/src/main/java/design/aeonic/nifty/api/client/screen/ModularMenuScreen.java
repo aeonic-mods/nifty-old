@@ -4,10 +4,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import design.aeonic.nifty.api.client.ui.UiElementTemplate;
 import design.aeonic.nifty.api.client.ui.UiElement;
 import design.aeonic.nifty.api.client.ui.UiSets;
+import design.aeonic.nifty.api.client.ui.template.StaticUiElementTemplate;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -17,11 +19,27 @@ import java.util.function.Supplier;
 
 public class ModularMenuScreen<M extends AbstractContainerMenu> extends AbstractContainerScreen<M> {
 
-    protected @Nullable UiElement<?> background = null;
+    protected @Nullable
+    UiElement<?> background = null;
     protected final List<UiElement<?>> uiElements = new ArrayList<>();
 
     public ModularMenuScreen(M menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
+    }
+
+    /**
+     * Adds an item slot with position based on the slot's index in the menu.
+     *
+     * @param index    the index of the menu slot
+     * @param template the slot ui element template
+     */
+    public void addSlot(int index, StaticUiElementTemplate template) {
+        // Figure out slot offset based on the ui element's width and height (menu slot size is 16x16)
+        int offsetX = (template.getWidth() - 16) / 2;
+        int offsetY = (template.getHeight() - 16) / 2;
+
+        Slot slot = menu.slots.get(index);
+        addUiElement(template, () -> null, slot.x - offsetX, slot.y - offsetY);
     }
 
     /**
@@ -35,9 +53,11 @@ public class ModularMenuScreen<M extends AbstractContainerMenu> extends Abstract
     public <C> void addUiElement(UiElementTemplate<C> template, Supplier<C> context, int x, int y) {
         addUiElement(template.make(context, x + leftPos, y + topPos, getBlitOffset()));
     }
+
     /**
      * Adds a UI element to the list of those to render. Should be called from or after {@link #init()} so that element
      * positioning will work properly.
+     *
      * @param uiElement the element to add
      */
     public <C> void addUiElement(UiElement<C> uiElement) {
@@ -72,7 +92,7 @@ public class ModularMenuScreen<M extends AbstractContainerMenu> extends Abstract
     @Override
     protected void renderTooltip(PoseStack stack, int mouseX, int mouseY) {
         super.renderTooltip(stack, mouseX, mouseY);
-        for (UiElement<?> element: uiElements) {
+        for (UiElement<?> element : uiElements) {
             if (element.template().hasTooltip() && element.isWithin(mouseX, mouseY)) {
                 renderComponentTooltip(stack, element.getTooltip(), mouseX, mouseY);
             }
